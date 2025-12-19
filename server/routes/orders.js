@@ -208,7 +208,7 @@ router.get("/admin/stats", protect, admin, async (req, res) => {
 
     res.json({
       totalOrders,
-      totalRevenue: totalRevenue[0] ? .total || 0,
+      totalRevenue: totalRevenue[0] ? totalRevenue[0].total : 0,
       statusCounts,
       revenueByMonth
     });

@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboard";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             <Footer />

@@ -143,6 +143,17 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleConfirmPayment = async (orderId) => {
+    try {
+      await api.put(`/orders/${orderId}/confirm-payment`, { method: "manual" });
+      fetchOrders();
+      fetchStats();
+    } catch (error) {
+      console.error("Error confirming payment:", error);
+      alert("Verification Failed: System root could not authorize payment.");
+    }
+  };
+
   const getStatusStyle = (status) => {
     const styles = {
       pending: "bg-amber-100 text-amber-700 border-amber-200",
@@ -165,14 +176,22 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] flex">
-      {/* Dynamic Sidebar - High Clarity */}
-      <aside className="w-80 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20 shadow-2xl shadow-gray-200/50">
-        <div className="p-10">
-          <div className="flex items-center space-x-3 text-emerald-700 mb-2">
-            <MdLocalPharmacy className="text-3xl" />
-            <h1 className="text-xl font-black tracking-tighter uppercase">MediConsole</h1>
+      {/* Elite Sidebar - Advanced Health OS */}
+      <aside className="w-80 bg-gray-900 text-white flex flex-col fixed h-full z-20 shadow-[20px_0_60px_-15px_rgba(0,0,0,0.1)]">
+        <div className="p-10 border-b border-white/5">
+          <div className="flex items-center space-x-4 mb-4 group cursor-pointer">
+            <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/20 group-hover:scale-110 transition-transform duration-500">
+              <MdLocalPharmacy className="text-3xl" />
+            </div>
+            <div>
+              <h1 className="text-xl font-black tracking-tighter uppercase leading-none">MediConsole</h1>
+              <p className="text-[9px] font-bold text-emerald-500 tracking-[0.2em] mt-1.5 uppercase">Clinical System OS</p>
+            </div>
           </div>
-          <p className="text-[9px] font-black text-gray-400 tracking-[0.3em] uppercase opacity-60">Manifest Control v2.4</p>
+          <div className="flex items-center space-x-2 bg-white/5 px-4 py-2 rounded-xl mt-6 border border-white/5">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span className="text-[9px] font-black text-emerald-100 uppercase tracking-widest">Live Data Feed Active</span>
+          </div>
         </div>
 
         <nav className="flex-1 px-6 space-y-3 mt-10">
@@ -442,6 +461,12 @@ const AdminDashboard = () => {
                       <span className={`px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest border ${getStatusStyle(order.status)}`}>
                         {order.status}
                       </span>
+                      {order.payment?.method && (
+                        <div className="flex items-center space-x-2 bg-emerald-50 px-4 py-2 rounded-xl">
+                          <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">{order.payment.method}</span>
+                          <div className={`w-1.5 h-1.5 rounded-full ${order.payment.confirmed ? 'bg-emerald-500' : 'bg-rose-500 animate-pulse'}`}></div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8 pt-8 border-t border-gray-50">

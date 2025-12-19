@@ -24,6 +24,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("telebirr");
+  const [transactionId, setTransactionId] = useState("");
 
   const requiresPrescription = cartItems.some(
     (item) => item.medicine.requiresPrescription
@@ -80,6 +82,10 @@ const Checkout = () => {
         })),
         deliveryAddress,
         prescriptionImage: prescriptionUrl,
+        payment: {
+          method: paymentMethod,
+          transactionId: transactionId,
+        }
       };
 
       await api.post("/orders", orderData);
@@ -212,48 +218,58 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Step 2: Prescription */}
-              {requiresPrescription && (
-                <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-10">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <div className="bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black">2</div>
-                    <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Medical Verification</h2>
-                  </div>
-                  <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-10">Your health is our priority. Please upload a scan of your doctor's note.</p>
+              {/* Step 3: Payment Method - Elite Local Integration */}
+              <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-10">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black">3</div>
+                  <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Settlement Manifest</h2>
+                </div>
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-10">Select your preferred local payment gateway.</p>
 
-                  <div className="relative group">
-                    <input
-                      id="prescription-upload"
-                      type="file"
-                      accept="image/*,.pdf"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor="prescription-upload"
-                      className={`flex flex-col items-center justify-center w-full min-h-[300px] rounded-[2rem] border-2 border-dashed transition-all cursor-pointer ${prescriptionPreview
-                          ? 'border-emerald-500 bg-emerald-50/20'
-                          : 'border-gray-100 bg-gray-50/50 hover:bg-gray-100 hover:border-emerald-200'
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                  {[
+                    { id: "telebirr", name: "Telebirr", sub: "Fast Mobile Pay", color: "text-blue-600", acc: "0912345678" },
+                    { id: "cbe", name: "CBE Bank", sub: "Commercial Bank", color: "text-purple-700", acc: "1000123456789" },
+                    { id: "dashen", name: "Dashen Bank", sub: "Premier Banking", color: "text-blue-800", acc: "2000987654321" },
+                    { id: "berhan", name: "Berhan Bank", sub: "Clinical Ethics", color: "text-emerald-700", acc: "3000555666777" },
+                  ].map((method) => (
+                    <button
+                      key={method.id}
+                      type="button"
+                      onClick={() => setPaymentMethod(method.id)}
+                      className={`p-6 rounded-3xl border-2 text-left transition-all relative overflow-hidden group ${paymentMethod === method.id
+                        ? 'border-emerald-600 bg-emerald-50/30'
+                        : 'border-gray-50 bg-gray-50/50 hover:bg-gray-100'
                         }`}
                     >
-                      {prescriptionPreview ? (
-                        <div className="p-4 w-full">
-                          <img src={prescriptionPreview} alt="Preview" className="max-h-[400px] mx-auto rounded-xl shadow-lg" />
-                          <p className="mt-4 text-center text-emerald-600 font-black uppercase text-xs">Verification Doc Ready</p>
-                        </div>
-                      ) : (
-                        <div className="text-center p-8">
-                          <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm shadow-emerald-900/5 group-hover:scale-110 transition-transform">
-                            <FaCloudUploadAlt className="text-4xl text-emerald-500" />
-                          </div>
-                          <h4 className="text-xl font-black text-gray-900 mb-2">Upload Prescription</h4>
-                          <p className="text-gray-400 font-bold text-xs uppercase tracking-widest leading-loose">Tap to select or drag and drop <br /> (JPG, PNG or PDF)</p>
+                      {paymentMethod === method.id && (
+                        <div className="absolute top-4 right-4 text-emerald-600"><FaCheck className="text-sm" /></div>
+                      )}
+                      <p className={`text-lg font-black tracking-tighter ${method.color}`}>{method.name}</p>
+                      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{method.sub}</p>
+                      {paymentMethod === method.id && (
+                        <div className="mt-4 pt-4 border-t border-emerald-100 animate-fade-in">
+                          <p className="text-[10px] font-black text-emerald-800 uppercase tracking-widest">Account Target:</p>
+                          <p className="text-sm font-black text-gray-900 mt-1">{method.acc}</p>
+                          <p className="text-[9px] font-bold text-gray-400 uppercase mt-1 tracking-tighter">YoniMediCare Pharmaceuticals</p>
                         </div>
                       )}
-                    </label>
-                  </div>
+                    </button>
+                  ))}
                 </div>
-              )}
+
+                <div>
+                  <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Transaction ID / Reference (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="Enter the ID from your payment SMS/Receipt"
+                    value={transactionId}
+                    onChange={(e) => setTransactionId(e.target.value)}
+                    className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold placeholder:text-gray-300"
+                  />
+                  <p className="mt-3 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">Payment will be manually verified by the pharmacy root</p>
+                </div>
+              </div>
 
               {/* Step 3: Action */}
               <div className="pt-8">

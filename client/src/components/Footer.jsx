@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MdLocalPharmacy, MdEmail, MdPhone, MdLocationOn, MdKeyboardArrowRight } from "react-icons/md";
+import { MdLocalPharmacy, MdEmail, MdPhone, MdLocationOn, MdKeyboardArrowRight, MdArrowForward } from "react-icons/md";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {

@@ -61,6 +61,11 @@ router.get("/:id", async (req, res) => {
 router.post("/", protect, admin, async (req, res) => {
   try {
     const medicine = await Medicine.create(req.body);
+
+    // record audit
+    const { recordAudit } = require("../utils/audit");
+    await recordAudit({ req, actorId: req.user._id, action: 'create_medicine', resourceType: 'Medicine', resourceId: medicine._id, details: { name: medicine.name } });
+
     res.status(201).json(medicine);
   } catch (error) {
     console.error(error);
@@ -75,16 +80,19 @@ router.put("/:id", protect, admin, async (req, res) => {
   try {
     const medicine = await Medicine.findByIdAndUpdate(
       req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
+      req.body, {
+      new: true,
+      runValidators: true,
+    }
     );
 
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
+
+    // record audit
+    const { recordAudit } = require("../utils/audit");
+    await recordAudit({ req, actorId: req.user._id, action: 'update_medicine', resourceType: 'Medicine', resourceId: medicine._id, details: req.body });
 
     res.json(medicine);
   } catch (error) {
@@ -103,6 +111,10 @@ router.delete("/:id", protect, admin, async (req, res) => {
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
+
+    // record audit
+    const { recordAudit } = require("../utils/audit");
+    await recordAudit({ req, actorId: req.user._id, action: 'delete_medicine', resourceType: 'Medicine', resourceId: medicine._id, details: { name: medicine.name } });
 
     res.json({ message: "Medicine deleted successfully" });
   } catch (error) {

@@ -37,6 +37,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/medicines", require("./routes/medicines"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/upload", require("./routes/upload"));
+app.use("/api/audit", require("./routes/audit"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

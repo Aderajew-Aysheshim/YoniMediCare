@@ -10,6 +10,7 @@ import {
   MdSupportAgent,
   MdPayments
 } from "react-icons/md";
+import { FaArrowRight, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 
 const Home = () => {
   const [featuredMedicines, setFeaturedMedicines] = useState([]);
@@ -37,23 +38,34 @@ const Home = () => {
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 -left-4 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
           <div className="absolute -bottom-8 right-20 w-96 h-96 bg-teal-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+          {/* Cinematic Backdrop Orbs */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 bg-[#0f172a]">
+            <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-emerald-900/40 rounded-full blur-[140px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-900/30 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+          </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-[0.9] uppercase">
-              Clinical <span className="text-teal-400">Excellence</span> <br className="hidden sm:block" />
-              Digitally <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Perfected</span>
+          <div className="text-center max-w-5xl mx-auto py-12">
+            <div className="inline-block px-8 py-3 bg-white/5 backdrop-blur-3xl rounded-full border border-white/10 mb-10 shadow-2xl animate-fade-in">
+              <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em]">Next-Generation Pharmaceutical Manifest</p>
+            </div>
+            <h1 className="text-5xl sm:text-7xl md:text-9xl font-black text-white mb-10 tracking-tighter leading-[0.85] uppercase animate-fade-in-up">
+              ELITE<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">HEALTHCARE</span><br />
+              DASHBOARD
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl mb-12 text-emerald-100/80 font-medium leading-relaxed max-w-2xl mx-auto">
-              Access your personalized pharmaceutical dashboard and manage your health manifest with professional clinical precision.
+            <p className="text-lg sm:text-2xl mb-16 text-emerald-100/60 font-medium leading-relaxed max-w-3xl mx-auto animate-fade-in-up delay-100 italic">
+              "Redefining clinical precision through cinematic technology and institutional trust."
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
-              <Link to="/medicines" className="bg-white text-emerald-900 border-b-4 border-emerald-100 hover:border-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all transform hover:-translate-y-1 active:scale-95 shadow-2xl">
-                Explore Manifest
+            <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up delay-200">
+              <Link to="/medicines" className="btn-emerald px-12 py-6 text-base group shadow-pro-lg">
+                <span className="flex items-center">
+                  LAUNCH CATALOG <FaArrowRight className="ml-4 group-hover:translate-x-3 transition-transform duration-500" />
+                </span>
               </Link>
-              <Link to="/register" className="glass text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-white/20 transition-all border border-white/20 active:scale-95">
-                Join Network
+              <Link to="/register" className="btn-outline px-12 py-6 text-base text-white border-white/20 hover:bg-white/5 hover:border-white transition-all">
+                JOIN CLINICAL NETWORK
               </Link>
             </div>
           </div>

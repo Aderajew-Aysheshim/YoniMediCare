@@ -15,27 +15,53 @@
   --animate-fade-in: fade-in 0.5s ease-out;
   --animate-fade-in-up: fade-in-up 0.5s ease-out;
   --animate-bounce-slow: bounce 3s linear infinite;
+  --animate-progress-bar: progress-bar 3s linear forwards;
+  --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
 
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
+  --shadow-elite: 0 32px 64px -15px rgba(0, 0, 0, 0.1);
+}
 
-    to {
-      opacity: 1;
-    }
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
 
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
+  to {
+    opacity: 1;
+  }
+}
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes progress-bar {
+  0% {
+    transform: scaleX(0);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pulse-soft {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
   }
 }
 
@@ -73,15 +99,27 @@ body {
 }
 
 .btn-primary {
-  @apply bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3 px-6 rounded-xl hover:shadow-[0_0_20px_#10b98166] transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95;
+  @apply bg-gray-900 text-white font-black uppercase tracking-widest text-[10px] py-4 px-8 rounded-2xl hover:bg-black hover:shadow-2xl hover:shadow-gray-900/20 transition-all duration-300 transform hover:-translate-y-1 active:scale-95;
+}
+
+.btn-emerald {
+  @apply bg-emerald-600 text-white font-black uppercase tracking-widest text-[10px] py-4 px-8 rounded-2xl hover:bg-emerald-700 hover:shadow-2xl hover:shadow-emerald-600/20 transition-all duration-300 transform hover:-translate-y-1 active:scale-95;
 }
 
 .btn-outline {
-  @apply border-2 border-emerald-600 text-emerald-600 font-semibold py-3 px-6 rounded-xl hover:bg-emerald-50 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95;
+  @apply border-2 border-gray-200 text-gray-900 font-black uppercase tracking-widest text-[10px] py-4 px-8 rounded-2xl hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1 active:scale-95;
 }
 
 .card-hover {
-  @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2;
+  @apply transition-all duration-500 hover:shadow-elite hover:-translate-y-2;
+}
+
+.shadow-pro {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-pro-lg {
+  box-shadow: 0 20px 80px -20px rgba(0, 0, 0, 0.1);
 }
 
 /* Custom scrollbar */
