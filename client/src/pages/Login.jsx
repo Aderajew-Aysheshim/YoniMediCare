@@ -68,10 +68,7 @@ const Login = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 px-4 sm:px-12 lg:px-24 bg-gray-50/30">
         <div className="w-full max-w-md">
           <div className="mb-12">
-            <div className="lg:hidden flex items-center space-x-2 text-emerald-600 mb-6">
-              <MdLocalPharmacy className="text-3xl" />
-              <span className="text-xl font-black tracking-tighter uppercase">YoniMediCare</span>
-            </div>
+            {/* Redundant mobile logo removed to fix double-branding bug */}
             <h3 className="text-4xl font-black text-gray-900 tracking-tighter uppercase mb-2">Welcome Back</h3>
             <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Identify yourself to continue</p>
           </div>

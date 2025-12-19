@@ -129,9 +129,7 @@ router.put("/:id/status", protect, admin, async (req, res) => {
     const { status } = req.body;
 
     const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
+      req.params.id, { status }, { new: true }
     )
       .populate("user", "name email phone")
       .populate("items.medicine");
@@ -141,6 +139,41 @@ router.put("/:id/status", protect, admin, async (req, res) => {
     }
 
     res.json(order);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// @route   PUT /api/orders/:id/confirm-payment
+// @desc    Confirm payment for an order (admin only)
+// @access  Private/Admin
+router.put("/:id/confirm-payment", protect, admin, async (req, res) => {
+  try {
+    const { method, transactionId } = req.body;
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    order.payment = {
+      confirmed: true,
+      method: method || "manual",
+      transactionId: transactionId || "",
+      confirmedAt: Date.now(),
+    };
+
+    // Advance status if still pending
+    if (order.status === "pending") order.status = "processing";
+
+    await order.save();
+
+    const populatedOrder = await Order.findById(order._id)
+      .populate("user", "name email phone")
+      .populate("items.medicine");
+
+    res.json(populatedOrder);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -175,7 +208,7 @@ router.get("/admin/stats", protect, admin, async (req, res) => {
 
     res.json({
       totalOrders,
-      totalRevenue: totalRevenue[0]?.total || 0,
+      totalRevenue: totalRevenue[0] ? .total || 0,
       statusCounts,
       revenueByMonth
     });

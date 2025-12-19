@@ -45,14 +45,14 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             to="/"
-            className={`flex items-center space-x-2 text-2xl font-black tracking-tighter hover:scale-105 transition-transform ${!isScrolled && location.pathname === "/" ? "text-white" : "text-emerald-700"
+            className={`flex items-center space-x-2 text-2xl font-black tracking-tighter hover:scale-105 transition-transform isolate ${!isScrolled && location.pathname === "/" ? "text-white" : "text-emerald-700"
               }`}
           >
             <div className={`p-1.5 rounded-xl ${!isScrolled && location.pathname === "/" ? "bg-white/10" : "bg-emerald-100"
               }`}>
               <MdLocalPharmacy className="text-3xl" />
             </div>
-            <span>Yoni<span className={!isScrolled && location.pathname === "/" ? "text-emerald-300" : "text-emerald-500"}>MediCare</span></span>
+            <span className="relative z-10">Yoni<span className={!isScrolled && location.pathname === "/" ? "text-emerald-300" : "text-emerald-500"}>MediCare</span></span>
           </Link>
 
           {/* Desktop Navigation */}

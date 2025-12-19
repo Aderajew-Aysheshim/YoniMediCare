@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../utils/api";
 import { FaPlus, FaEdit, FaTrash, FaBox, FaShoppingBag, FaDollarSign, FaChartBar, FaCloudUploadAlt } from "react-icons/fa";
-import { MdDashboard, MdInventory, MdListAlt, MdNotifications, MdCheck, MdClose, MdVisibility } from "react-icons/md";
+import { MdDashboard, MdInventory, MdListAlt, MdNotifications, MdCheck, MdClose, MdVisibility, MdLocalPharmacy } from "react-icons/md";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -164,113 +164,127 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex">
-      {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20">
-        <div className="p-8">
-          <h1 className="text-2xl font-black text-gray-900 tracking-tighter uppercase mb-1">M-CONSOLE</h1>
-          <p className="text-[10px] font-black text-emerald-600 tracking-[0.2em]">ADMINISTRATION v2.0</p>
+    <div className="min-h-screen bg-[#f3f4f6] flex">
+      {/* Dynamic Sidebar - High Clarity */}
+      <aside className="w-80 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20 shadow-2xl shadow-gray-200/50">
+        <div className="p-10">
+          <div className="flex items-center space-x-3 text-emerald-700 mb-2">
+            <MdLocalPharmacy className="text-3xl" />
+            <h1 className="text-xl font-black tracking-tighter uppercase">MediConsole</h1>
+          </div>
+          <p className="text-[9px] font-black text-gray-400 tracking-[0.3em] uppercase opacity-60">Manifest Control v2.4</p>
         </div>
 
-        <nav className="flex-1 px-4 space-y-2 mt-8">
+        <nav className="flex-1 px-6 space-y-3 mt-10">
           {[
-            { id: "overview", label: "Overview", icon: MdDashboard },
-            { id: "medicines", label: "Inventory", icon: MdInventory },
-            { id: "orders", label: "Orders Hub", icon: MdListAlt },
+            { id: "overview", label: "Strategy Room", icon: MdDashboard, desc: "Global Analytics" },
+            { id: "medicines", label: "Catalog Hub", icon: MdInventory, desc: "Stock Manifests" },
+            { id: "orders", label: "Logistics Hub", icon: MdListAlt, desc: "Active Shipments" },
           ].map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center space-x-4 px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all ${activeTab === item.id
-                  ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-200 translate-x-2'
-                  : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+              className={`w-full flex items-center space-x-4 px-6 py-5 rounded-[2rem] transition-all group ${activeTab === item.id
+                ? 'bg-gray-900 text-white shadow-2xl shadow-gray-900/40 translate-x-3'
+                : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
                 }`}
             >
-              <item.icon className="text-xl" />
-              <span>{item.label}</span>
+              <item.icon className={`text-2xl ${activeTab === item.id ? 'text-emerald-400' : 'group-hover:text-emerald-600'}`} />
+              <div className="text-left">
+                <p className="font-black text-[11px] uppercase tracking-widest">{item.label}</p>
+                <p className={`text-[8px] font-bold uppercase tracking-tight ${activeTab === item.id ? 'text-white/40' : 'text-gray-300'}`}>{item.desc}</p>
+              </div>
             </button>
           ))}
         </nav>
 
-        <div className="p-8">
-          <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">System Health</p>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-black text-gray-900">OPERATIONAL</span>
+        <div className="p-10">
+          <div className="bg-emerald-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
+            <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-800 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+            <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-4">Core Frequency</p>
+            <div className="flex items-center space-x-3">
+              <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></div>
+              <span className="text-xs font-black tracking-widest">LIVE DATA FEED</span>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 ml-72 p-12">
-        <header className="flex justify-between items-center mb-12">
+      {/* Main Content Pane */}
+      <main className="flex-1 ml-80 p-12 lg:p-16">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
           <div>
-            <h2 className="text-4xl font-black text-gray-900 tracking-tighter uppercase">{activeTab}</h2>
-            <p className="text-gray-400 font-bold text-xs uppercase tracking-widest mt-1">Management Interface</p>
+            <div className="flex items-center space-x-3 mb-2">
+              <span className="h-1 w-8 bg-emerald-600 rounded-full"></span>
+              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Administrative Command</p>
+            </div>
+            <h2 className="text-5xl font-black text-gray-900 tracking-tighter uppercase leading-none">{activeTab} <span className="text-emerald-600">Report</span></h2>
           </div>
-          <div className="flex items-center space-x-6">
-            <button className="relative p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all">
-              <MdNotifications className="text-xl text-gray-700" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full"></span>
-            </button>
-            <div className="flex items-center space-x-3 bg-white p-2 pr-6 rounded-2xl border border-gray-100 shadow-sm">
-              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center font-black text-emerald-700">A</div>
-              <div>
-                <p className="text-xs font-black text-gray-900">ADMIN USER</p>
-                <p className="text-[9px] font-bold text-emerald-600">SYSTEM ROOT</p>
+
+          <div className="flex items-center space-x-6 bg-white p-3 pr-8 rounded-[2.5rem] shadow-xl shadow-gray-200/40 border border-gray-50">
+            <div className="flex -space-x-3">
+              <div className="w-12 h-12 bg-emerald-600 rounded-full border-4 border-white flex items-center justify-center font-black text-white text-lg">Y</div>
+              <div className="w-12 h-12 bg-gray-900 rounded-full border-4 border-white flex items-center justify-center">
+                <MdNotifications className="text-white text-xl" />
               </div>
+            </div>
+            <div>
+              <p className="text-xs font-black text-gray-900 uppercase">Yoni Admin</p>
+              <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">System Architect</p>
             </div>
           </div>
         </header>
 
-        {/* Tab Content */}
+        {/* Tab Content - Strategic Overview */}
         {activeTab === "overview" && stats && (
-          <div className="animate-fade-in">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-              <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform"></div>
-                <FaDollarSign className="text-3xl text-emerald-600 mb-4" />
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Income</h4>
-                <p className="text-3xl font-black text-gray-900 mt-1">${stats.totalRevenue.toFixed(2)}</p>
-              </div>
-              <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform"></div>
-                <FaShoppingBag className="text-3xl text-blue-600 mb-4" />
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Orders Executed</h4>
-                <p className="text-3xl font-black text-gray-900 mt-1">{stats.totalOrders}</p>
-              </div>
-              <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform"></div>
-                <FaBox className="text-3xl text-amber-600 mb-4" />
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Inventory</h4>
-                <p className="text-3xl font-black text-gray-900 mt-1">{medicines.length}</p>
-              </div>
-              <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform"></div>
-                <FaChartBar className="text-3xl text-rose-600 mb-4" />
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Conversion Rate</h4>
-                <p className="text-3xl font-black text-gray-900 mt-1">4.2%</p>
-              </div>
+          <div className="animate-fade-in pb-20">
+            {/* High-Fidelity Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-20">
+              {[
+                { label: "Total Revenue", value: `$${stats.totalRevenue.toFixed(0)}`, icon: FaDollarSign, color: "emerald", trend: "+12.5%" },
+                { label: "Orders Dispatched", value: stats.totalOrders, icon: FaShoppingBag, color: "blue", trend: "+8.2%" },
+                { label: "Active SKUs", value: medicines.length, icon: FaBox, color: "amber", trend: "Stable" },
+                { label: "Growth Index", value: "4.2%", icon: FaChartBar, color: "rose", trend: "+0.4%" },
+              ].map((stat, i) => (
+                <div key={i} className="bg-white p-10 rounded-[3rem] shadow-xl shadow-gray-200/30 border border-gray-50 relative overflow-hidden group">
+                  <div className={`absolute top-0 right-0 w-24 h-24 bg-${stat.color}-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-700`}></div>
+                  <div className={`w-14 h-14 bg-${stat.color}-100 rounded-2xl flex items-center justify-center mb-8`}>
+                    <stat.icon className={`text-2xl text-${stat.color}-600`} />
+                  </div>
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">{stat.label}</h4>
+                  <div className="flex items-end justify-between">
+                    <p className="text-4xl font-black text-gray-900 tracking-tighter">{stat.value}</p>
+                    <span className={`text-[10px] font-black px-2 py-1 bg-${stat.color}-50 text-${stat.color}-600 rounded-lg`}>{stat.trend}</span>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            {/* Simplified Chart (CSS Based) */}
-            <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 mb-12">
-              <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-8">Revenue Momentum</h3>
-              <div className="flex items-end space-x-4 h-64 border-b border-gray-100 pb-2">
+            {/* Strategic Revenue Momentum */}
+            <div className="bg-white p-12 lg:p-16 rounded-[4rem] shadow-2xl shadow-gray-200/40 border border-gray-50 mb-12">
+              <div className="flex justify-between items-end mb-12">
+                <div>
+                  <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter mb-1">Financial Momentum</h3>
+                  <p className="text-gray-400 font-bold text-xs uppercase tracking-widest leading-none">Global Revenue Distribution by Month</p>
+                </div>
+                <div className="flex space-x-2">
+                  <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Growth Phase</span>
+                </div>
+              </div>
+
+              <div className="flex items-end space-x-6 h-80 border-b border-gray-100 pb-4">
                 {stats.revenueByMonth?.map((item, i) => (
                   <div key={i} className="flex-1 flex flex-col items-center group">
                     <div
-                      className="w-full bg-emerald-600 rounded-t-xl transition-all duration-700 hover:bg-emerald-400 cursor-pointer relative"
-                      style={{ height: `${(item.revenue / Math.max(...stats.revenueByMonth.map(r => r.revenue))) * 100}%` }}
+                      className="w-full bg-emerald-600 rounded-2xl transition-all duration-700 hover:bg-emerald-900 cursor-pointer relative shadow-lg shadow-emerald-100"
+                      style={{ height: `${Math.max(10, (item.revenue / Math.max(...stats.revenueByMonth.map(r => r.revenue))) * 100)}%` }}
                     >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-gray-900 text-white text-[10px] px-2 py-1 rounded">
+                      <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 whitespace-nowrap bg-gray-900 text-white text-[10px] font-black px-4 py-2 rounded-xl">
                         ${item.revenue.toFixed(0)}
                       </div>
                     </div>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-4">Month {item._id}</span>
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-6">M-{item._id}</span>
                   </div>
                 ))}
               </div>
@@ -470,14 +484,27 @@ const AdminDashboard = () => {
                     {/* Flow Control */}
                     <div className="bg-gray-50 p-8 rounded-[2.5rem] border border-gray-100">
                       <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Manifest Status Control</h4>
+
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Payment</p>
+                            <p className={`font-black text-sm mt-1 ${order.payment?.confirmed ? 'text-emerald-600' : 'text-rose-500'}`}>{order.payment?.confirmed ? 'Paid' : 'Unpaid'}</p>
+                          </div>
+                          {!order.payment?.confirmed && (
+                            <button onClick={() => handleConfirmPayment(order._id)} className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-black text-xs uppercase tracking-widest">Confirm Payment</button>
+                          )}
+                        </div>
+                      </div>
+
                       <div className="space-y-2">
                         {["pending", "processing", "shipped", "delivered", "cancelled"].map((s) => (
                           <button
                             key={s}
                             onClick={() => handleUpdateOrderStatus(order._id, s)}
                             className={`w-full flex items-center justify-between px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${order.status === s
-                                ? 'bg-gray-900 text-white shadow-xl shadow-black/20'
-                                : 'bg-white text-gray-400 border border-gray-100 hover:border-emerald-500 hover:text-emerald-600'
+                              ? 'bg-gray-900 text-white shadow-xl shadow-black/20'
+                              : 'bg-white text-gray-400 border border-gray-100 hover:border-emerald-500 hover:text-emerald-600'
                               }`}
                           >
                             <span>{s}</span>

@@ -49,10 +49,10 @@ const Home = () => {
               Access your personalized pharmaceutical dashboard and manage your health manifest with professional clinical precision.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
-              <Link to="/medicines" className="bg-white text-emerald-900 border-b-4 border-emerald-100 hover:border-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all transform hover:-translate-y-1 active:scale-95 shadow-2xl">
+              <Link to="/medicines" className="bg-white text-emerald-900 border-b-4 border-emerald-100 hover:border-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all transform hover:-translate-y-1 active:scale-95 shadow-2xl">
                 Explore Manifest
               </Link>
-              <Link to="/register" className="glass text-white/90 px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-all border border-white/20 active:scale-95">
+              <Link to="/register" className="glass text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-white/20 transition-all border border-white/20 active:scale-95">
                 Join Network
               </Link>
             </div>

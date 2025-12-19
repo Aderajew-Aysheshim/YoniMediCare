@@ -94,8 +94,8 @@ const Medicines = () => {
                       key={cat}
                       onClick={() => setFilters({ ...filters, category: cat === "All" ? "" : cat })}
                       className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${(cat === "All" && !filters.category) || filters.category === cat
-                          ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
-                          : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
+                        : "text-gray-600 hover:bg-gray-50"
                         }`}
                     >
                       {cat}
@@ -145,22 +145,23 @@ const Medicines = () => {
           {/* Main Content */}
           <div className="flex-grow">
             {/* Search & Mobile Filter Toggle */}
-            <div className="flex gap-4 mb-8">
-              <div className="relative flex-grow group">
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <div className="relative flex-grow group order-2 sm:order-1">
                 <FaSearch className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-600 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Search medicines, ailments, or brands..."
+                  placeholder="Search manifest..."
                   value={filters.search}
                   onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                  className="w-full pl-16 pr-6 py-5 bg-white border-2 border-transparent rounded-[2.5rem] shadow-sm focus:border-emerald-500 focus:shadow-xl transition-all text-lg font-medium outline-none"
+                  className="w-full pl-16 pr-6 py-4 sm:py-5 bg-white border-2 border-transparent rounded-[2rem] sm:rounded-[2.5rem] shadow-sm focus:border-emerald-500 focus:shadow-xl transition-all text-base sm:text-lg font-medium outline-none"
                 />
               </div>
               <button
                 onClick={() => setShowMobileFilters(true)}
-                className="lg:hidden p-5 bg-white rounded-full shadow-sm text-emerald-600"
+                className="lg:hidden p-4 sm:p-5 bg-white rounded-2xl sm:rounded-full shadow-sm text-emerald-600 order-1 sm:order-2 self-end sm:self-auto flex items-center space-x-2"
               >
                 <MdOutlineFilterList className="text-2xl" />
+                <span className="sm:hidden font-black uppercase tracking-widest text-[10px]">Adjust Filters</span>
               </button>
             </div>
 
@@ -251,8 +252,8 @@ const Medicines = () => {
                         key={cat}
                         onClick={() => setFilters({ ...filters, category: cat === "All" ? "" : cat })}
                         className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${(cat === "All" && !filters.category) || filters.category === cat
-                            ? "bg-emerald-600 text-white border-emerald-600"
-                            : "text-gray-600 border-gray-100"
+                          ? "bg-emerald-600 text-white border-emerald-600"
+                          : "text-gray-600 border-gray-100"
                           }`}
                       >
                         {cat}
