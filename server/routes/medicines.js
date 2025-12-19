@@ -9,7 +9,7 @@ const { admin } = require("../middleware/adminMiddleware");
 // @access  Public
 router.get("/", async (req, res) => {
   try {
-    const { search, category, minPrice, maxPrice } = req.query;
+    const { search, category, minPrice, maxPrice, sort } = req.query;
     let query = {};
 
     // Search by name
@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
       if (maxPrice) query.price.$lte = Number(maxPrice);
     }
 
-    const medicines = await Medicine.find(query).sort({ createdAt: -1 });
+    const medicines = await Medicine.find(query).sort(sort || { createdAt: -1 });
     res.json(medicines);
   } catch (error) {
     console.error(error);

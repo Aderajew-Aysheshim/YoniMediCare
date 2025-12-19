@@ -147,4 +147,42 @@ router.put("/:id/status", protect, admin, async (req, res) => {
   }
 });
 
+// @route   GET /api/orders/admin/stats
+// @desc    Get order statistics (admin only)
+// @access  Private/Admin
+router.get("/admin/stats", protect, admin, async (req, res) => {
+  try {
+    const totalOrders = await Order.countDocuments();
+    const totalRevenue = await Order.aggregate([
+      { $match: { status: { $ne: "cancelled" } } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } },
+    ]);
+
+    const statusCounts = await Order.aggregate([
+      { $group: { _id: "$status", count: { $sum: 1 } } },
+    ]);
+
+    const revenueByMonth = await Order.aggregate([
+      { $match: { status: { $ne: "cancelled" } } },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          revenue: { $sum: "$totalAmount" }
+        }
+      },
+      { $sort: { "_id": 1 } }
+    ]);
+
+    res.json({
+      totalOrders,
+      totalRevenue: totalRevenue[0]?.total || 0,
+      statusCounts,
+      revenueByMonth
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 module.exports = router;

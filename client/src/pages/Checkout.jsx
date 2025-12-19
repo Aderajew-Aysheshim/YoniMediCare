@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
 import api from "../utils/api";
+import { FaCloudUploadAlt, FaArrowLeft, FaCheck } from "react-icons/fa";
+import { MdOutlinePayments, MdSecurity } from "react-icons/md";
 
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useContext(CartContext);
@@ -18,8 +20,10 @@ const Checkout = () => {
   });
 
   const [prescriptionFile, setPrescriptionFile] = useState(null);
+  const [prescriptionPreview, setPrescriptionPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const requiresPrescription = cartItems.some(
     (item) => item.medicine.requiresPrescription
@@ -30,7 +34,15 @@ const Checkout = () => {
   };
 
   const handleFileChange = (e) => {
-    setPrescriptionFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setPrescriptionFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPrescriptionPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -38,7 +50,7 @@ const Checkout = () => {
     setError("");
 
     if (requiresPrescription && !prescriptionFile) {
-      setError("Please upload a prescription for prescription-required medicines");
+      setError("Critical Requirement: Please upload your prescription to continue.");
       return;
     }
 
@@ -72,174 +84,249 @@ const Checkout = () => {
 
       await api.post("/orders", orderData);
 
+      setOrderPlaced(true);
       clearCart();
-      navigate("/orders");
+      setTimeout(() => {
+        navigate("/orders");
+      }, 3000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to place order. Please try again.");
+      setError(err.response?.data?.message || "Hyperlink Error: Connection to pharmacy failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (orderPlaced) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-4">
+        <div className="bg-white rounded-[3rem] shadow-2xl p-16 text-center max-w-xl animate-fade-in">
+          <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce-slow">
+            <FaCheck className="text-4xl text-emerald-600" />
+          </div>
+          <h2 className="text-4xl font-black text-gray-900 mb-4 tracking-tighter">ORDER SECURED</h2>
+          <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] mb-8">Redirecting to order tracking...</p>
+          <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+            <div className="bg-emerald-600 h-full w-full animate-progress-bar origin-left"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     navigate("/cart");
     return null;
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8">Checkout</h1>
+  const SHIPPING_COST = 5.00;
+  const total = getCartTotal() + SHIPPING_COST;
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  return (
+    <div className="min-h-screen bg-[#f8fafc] pt-28 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-12">
+          <Link to="/cart" className="flex items-center text-gray-400 hover:text-emerald-600 font-black text-[10px] tracking-widest uppercase mb-4 transition-colors">
+            <FaArrowLeft className="mr-2" />
+            BACK TO HUB
+          </Link>
+          <h1 className="text-5xl font-black text-gray-900 tracking-tighter uppercase">Finalization</h1>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Checkout Form */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
+            <form onSubmit={handleSubmit} className="space-y-8">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                <div className="bg-red-50 border border-red-100 text-red-700 p-6 rounded-3xl font-bold text-sm animate-fade-in">
                   {error}
                 </div>
               )}
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Delivery Address</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Street Address *
-                  </label>
-                  <input
-                    type="text"
-                    name="street"
-                    required
-                    value={deliveryAddress.street}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
+              {/* Step 1: Delivery */}
+              <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-10">
+                <div className="flex items-center space-x-4 mb-10">
+                  <div className="bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black">1</div>
+                  <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Logistics</h2>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    City *
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    required
-                    value={deliveryAddress.city}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="md:col-span-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Street Address</label>
+                    <input
+                      type="text"
+                      name="street"
+                      required
+                      value={deliveryAddress.street}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    State/Region *
-                  </label>
-                  <input
-                    type="text"
-                    name="state"
-                    required
-                    value={deliveryAddress.state}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">City</label>
+                    <input
+                      type="text"
+                      name="city"
+                      required
+                      value={deliveryAddress.city}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    ZIP Code *
-                  </label>
-                  <input
-                    type="text"
-                    name="zipCode"
-                    required
-                    value={deliveryAddress.zipCode}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">State / Region</label>
+                    <input
+                      type="text"
+                      name="state"
+                      required
+                      value={deliveryAddress.state}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    value={deliveryAddress.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Zip Code</label>
+                    <input
+                      type="text"
+                      name="zipCode"
+                      required
+                      value={deliveryAddress.zipCode}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Phone</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={deliveryAddress.phone}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                    />
+                  </div>
                 </div>
               </div>
 
+              {/* Step 2: Prescription */}
               {requiresPrescription && (
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                    Prescription Upload
-                  </h2>
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                    <p className="text-yellow-800 font-semibold">
-                      ⚠️ Your cart contains prescription-required medicines. Please upload a valid prescription.
-                    </p>
+                <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-10">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black">2</div>
+                    <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Medical Verification</h2>
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={handleFileChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
-                  {prescriptionFile && (
-                    <p className="text-sm text-gray-600 mt-2">
-                      Selected: {prescriptionFile.name}
-                    </p>
-                  )}
+                  <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-10">Your health is our priority. Please upload a scan of your doctor's note.</p>
+
+                  <div className="relative group">
+                    <input
+                      id="prescription-upload"
+                      type="file"
+                      accept="image/*,.pdf"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="prescription-upload"
+                      className={`flex flex-col items-center justify-center w-full min-h-[300px] rounded-[2rem] border-2 border-dashed transition-all cursor-pointer ${prescriptionPreview
+                          ? 'border-emerald-500 bg-emerald-50/20'
+                          : 'border-gray-100 bg-gray-50/50 hover:bg-gray-100 hover:border-emerald-200'
+                        }`}
+                    >
+                      {prescriptionPreview ? (
+                        <div className="p-4 w-full">
+                          <img src={prescriptionPreview} alt="Preview" className="max-h-[400px] mx-auto rounded-xl shadow-lg" />
+                          <p className="mt-4 text-center text-emerald-600 font-black uppercase text-xs">Verification Doc Ready</p>
+                        </div>
+                      ) : (
+                        <div className="text-center p-8">
+                          <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm shadow-emerald-900/5 group-hover:scale-110 transition-transform">
+                            <FaCloudUploadAlt className="text-4xl text-emerald-500" />
+                          </div>
+                          <h4 className="text-xl font-black text-gray-900 mb-2">Upload Prescription</h4>
+                          <p className="text-gray-400 font-bold text-xs uppercase tracking-widest leading-loose">Tap to select or drag and drop <br /> (JPG, PNG or PDF)</p>
+                        </div>
+                      )}
+                    </label>
+                  </div>
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? "Placing Order..." : "Place Order"}
-              </button>
+              {/* Step 3: Action */}
+              <div className="pt-8">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary w-full py-6 rounded-3xl text-2xl flex items-center justify-center space-x-4 shadow-emerald-200 uppercase tracking-tighter"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin h-6 w-6 border-b-2 border-white rounded-full"></div>
+                      <span>AUTHORIZING...</span>
+                    </>
+                  ) : (
+                    <>
+                      <MdSecurity className="text-3xl" />
+                      <span>EXECUTE SHIPMENT</span>
+                    </>
+                  )}
+                </button>
+                <p className="text-center mt-6 text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]">By placing order you agree to the medical terms of service</p>
+              </div>
             </form>
           </div>
 
-          {/* Order Summary */}
+          {/* Sidebar Area */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
+            <div className="sticky top-28 space-y-6">
+              <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-bl-[3rem] -z-10"></div>
+                <h3 className="text-lg font-black text-gray-900 mb-8 uppercase tracking-widest border-b border-gray-50 pb-4">Treatment List</h3>
 
-              <div className="space-y-3 mb-6">
-                {cartItems.map((item) => (
-                  <div key={item.medicine._id} className="flex justify-between text-sm">
-                    <span className="text-gray-600">
-                      {item.medicine.name} x {item.quantity}
-                    </span>
-                    <span className="font-semibold">
-                      ${(item.medicine.price * item.quantity).toFixed(2)}
-                    </span>
+                <div className="space-y-6">
+                  {cartItems.map((item) => (
+                    <div key={item.medicine._id} className="flex justify-between items-center group">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gray-100 rounded-xl overflow-hidden shadow-inner font-black text-xs flex items-center justify-center">
+                          {item.quantity}×
+                        </div>
+                        <div>
+                          <p className="text-sm font-black text-gray-900 truncate max-w-[120px]">{item.medicine.name}</p>
+                          <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">{item.medicine.category}</p>
+                        </div>
+                      </div>
+                      <span className="text-sm font-black text-gray-900">${(item.medicine.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-10 pt-8 border-t border-emerald-50 space-y-4">
+                  <div className="flex justify-between text-gray-400 font-bold text-[10px] uppercase tracking-widest">
+                    <span>Subtotal</span>
+                    <span className="text-gray-900 font-black">${getCartTotal().toFixed(2)}</span>
                   </div>
-                ))}
+                  <div className="flex justify-between text-gray-400 font-bold text-[10px] uppercase tracking-widest">
+                    <span>Logistics</span>
+                    <span className="text-gray-900 font-black">${SHIPPING_COST.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-2xl font-black text-emerald-600 pt-4 tracking-tighter">
+                    <span>TOTAL</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
+                </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4 space-y-3">
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+              <div className="bg-emerald-900 rounded-[2rem] p-8 text-white relative overflow-hidden">
+                {/* Cyber decoration */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-4 left-4 w-full h-full border border-emerald-400 rounded-2xl"></div>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Shipping</span>
-                  <span>$5.00</span>
-                </div>
-                <div className="flex justify-between text-xl font-bold text-gray-800">
-                  <span>Total</span>
-                  <span>${(getCartTotal() + 5).toFixed(2)}</span>
-                </div>
+                <MdSecurity className="text-4xl text-emerald-400 mb-4" />
+                <h4 className="text-sm font-black uppercase tracking-widest mb-2">Vault Protection</h4>
+                <p className="text-emerald-300 text-[10px] font-bold leading-relaxed uppercase tracking-wider">Your clinical and financial data is encrypted and managed by licensed pharmaceutical standards.</p>
               </div>
             </div>
           </div>

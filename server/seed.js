@@ -1,204 +1,190 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const path = require("path");
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const User = require("./models/User");
 const Medicine = require("./models/Medicine");
 
+const medicines = [
+  {
+    name: "Paracetamol 500mg",
+    description: "Fast-acting analgesic and antipyretic. Essential for fever reduction and effective relief of mild to moderate pain including headaches, muscle aches, and common cold symptoms.",
+    category: "Pain Relief",
+    price: 30,
+    stock: 500,
+    manufacturer: "EthioPharma Labs",
+    image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae",
+    dosage: "1-2 tablets every 6 hours as needed.",
+    sideEffects: "Rare: nausea, skin rash, or allergic reactions.",
+    requiresPrescription: false,
+  },
+  {
+    name: "Amoxicillin Capsules",
+    description: "Broad-spectrum penicillin antibiotic used to treat various bacterial infections, including respiratory tract, ear, and skin infections. High clinical efficacy profile.",
+    category: "Antibiotics",
+    price: 120,
+    stock: 250,
+    manufacturer: "Global Meds Corp",
+    image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88",
+    dosage: "One capsule three times daily for 7-10 days.",
+    sideEffects: "Nausea, diarrhea, or mild stomach discomfort.",
+    requiresPrescription: true,
+  },
+  {
+    name: "Vitamin C Tablets",
+    description: "High-potency Ascorbic Acid for immune system reinforcement and antioxidant protection. Promotes healthy skin, bone density, and iron absorption.",
+    category: "Vitamins",
+    price: 80,
+    stock: 1000,
+    manufacturer: "PureHealth Nutrition",
+    image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2",
+    dosage: "One tablet daily with water.",
+    sideEffects: "Minimal: Large doses may cause digestive upset.",
+    requiresPrescription: false,
+  },
+  {
+    name: "Cough Syrup",
+    description: "Advanced expectorant formula designed to clear bronchial pathways and soothe irritated throat membranes. Non-drowsy relief for persistent chesty coughs.",
+    category: "Cold & Flu",
+    price: 65,
+    stock: 300,
+    manufacturer: "ClearAir Pharamceuticals",
+    image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f",
+    dosage: "10ml every 8 hours.",
+    sideEffects: "None reported at therapeutic levels.",
+    requiresPrescription: false,
+  },
+  {
+    name: "Antacid Syrup",
+    description: "Rapid neutralized action for gastric acidity and heartburn relief. Forms a protective barrier over the stomach lining for long-lasting comfort.",
+    category: "Digestive Health",
+    price: 90,
+    stock: 450,
+    manufacturer: "GastroGuard Inc",
+    image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267b9",
+    dosage: "5-10ml after meals and at bedtime.",
+    sideEffects: "Possible mild constipation or diarrhea.",
+    requiresPrescription: false,
+  },
+  {
+    name: "Blood Pressure Monitor",
+    description: "Professional-grade digital sphygmomanometer with institutional accuracy. Features irregular heartbeat detection and multi-user memory storage.",
+    category: "Heart Health",
+    price: 1500,
+    stock: 50,
+    manufacturer: "Precision Diagnostics",
+    image: "https://images.unsplash.com/photo-1580281657527-47c48d1c07dd",
+    dosage: "Use twice daily for trend monitoring.",
+    sideEffects: "None.",
+    requiresPrescription: false,
+  },
+  {
+    name: "Glucometer",
+    description: "Institutional-standard blood glucose monitoring system. Provides 5-second results with minimal blood sample required. Bluetooth-sync capable.",
+    category: "Diabetes",
+    price: 1100,
+    stock: 65,
+    manufacturer: "LifeLink Biotech",
+    image: "https://images.unsplash.com/photo-1582719478170-2f08d4fbcf06",
+    dosage: "Monitor as advised by clinical professional.",
+    sideEffects: "None.",
+    requiresPrescription: false,
+  },
+  {
+    name: "Skin Ointment",
+    description: "Triple-action dermatological ointment for localized skin infections and inflammatory conditions. Clinical-grade moisturizing and healing barrier.",
+    category: "Skin Care",
+    price: 55,
+    stock: 400,
+    manufacturer: "DermaElite Labs",
+    image: "https://images.unsplash.com/photo-1598514983318-2f6c28b8e6f0",
+    dosage: "Apply thin layer to affected area twice daily.",
+    sideEffects: "Rare: Localized skin irritation.",
+    requiresPrescription: false,
+  },
+  {
+    name: "First Aid Kit",
+    description: "Total trauma management system. Contains 120 essential clinical pieces including sterile gauze, trauma shears, and specialized antiseptic agents.",
+    category: "First Aid",
+    price: 500,
+    stock: 120,
+    manufacturer: "SafeStep Medical",
+    image: "https://images.unsplash.com/photo-1584515933487-779824d29309",
+    dosage: "Follow contained protocol manual for triage.",
+    sideEffects: "None.",
+    requiresPrescription: false,
+  },
+  {
+    name: "Medical Gloves",
+    description: "Powder-free, nitrile clinical examination discovered gloves. High tactile sensitivity with superior chemical and puncture resistance. Pack of 100.",
+    category: "Other",
+    price: 40,
+    stock: 2000,
+    manufacturer: "BarrierPro Health",
+    image: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144",
+    dosage: "Single use only per patient contact.",
+    sideEffects: "None reported.",
+    requiresPrescription: false,
+  },
+];
+
 const seedDatabase = async () => {
   try {
-    // Connect to MongoDB
+    console.log("Connecting to MongoDB...");
     await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB Connected Successfully");
 
-    console.log("MongoDB Connected");
-
-    // Clear existing data
+    console.log("Deleting existing users...");
     await User.deleteMany({});
+
+    console.log("Deleting existing medicines...");
     await Medicine.deleteMany({});
 
-    console.log("Cleared existing data");
-
-    // Create admin user
-    const admin = await User.create({
-      name: "Admin User",
-      email: "admin@yonimedicare.com",
-      password: "admin123",
-      phone: "+251 911 111 111",
-      address: {
-        street: "123 Admin Street",
-        city: "Addis Ababa",
-        state: "Addis Ababa",
-        zipCode: "1000",
-      },
-      role: "admin",
-    });
-
-    // Create regular user
-    const user = await User.create({
-      name: "John Doe",
-      email: "user@example.com",
-      password: "user123",
-      phone: "+251 911 222 222",
-      address: {
-        street: "456 User Avenue",
-        city: "Addis Ababa",
-        state: "Addis Ababa",
-        zipCode: "1001",
-      },
-      role: "user",
-    });
-
-    console.log("Created users");
-
-    // Create sample medicines
-    const medicines = [
-      {
-        name: "Paracetamol 500mg",
-        description: "Effective pain relief and fever reducer. Suitable for headaches, muscle aches, and cold symptoms.",
-        category: "Pain Relief",
-        price: 5.99,
-        stock: 100,
-        manufacturer: "PharmaCorp",
-        dosage: "1-2 tablets every 4-6 hours",
-        sideEffects: "Rare: nausea, allergic reactions",
-        requiresPrescription: false,
-      },
-      {
-        name: "Amoxicillin 500mg",
-        description: "Broad-spectrum antibiotic for bacterial infections. Treats respiratory, ear, and urinary tract infections.",
-        category: "Antibiotics",
-        price: 12.99,
-        stock: 50,
-        manufacturer: "MediPharm",
-        dosage: "1 capsule 3 times daily",
-        sideEffects: "Diarrhea, nausea, skin rash",
-        requiresPrescription: true,
-      },
-      {
-        name: "Vitamin C 1000mg",
-        description: "Immune system support and antioxidant. Helps with wound healing and iron absorption.",
-        category: "Vitamins",
-        price: 8.99,
-        stock: 150,
-        manufacturer: "HealthPlus",
-        dosage: "1 tablet daily",
-        sideEffects: "Rare: upset stomach at high doses",
-        requiresPrescription: false,
-      },
-      {
-        name: "Ibuprofen 400mg",
-        description: "Anti-inflammatory pain reliever. Effective for arthritis, menstrual cramps, and muscle pain.",
-        category: "Pain Relief",
-        price: 7.49,
-        stock: 80,
-        manufacturer: "PharmaCorp",
-        dosage: "1 tablet every 6-8 hours",
-        sideEffects: "Stomach upset, dizziness",
-        requiresPrescription: false,
-      },
-      {
-        name: "Cetirizine 10mg",
-        description: "Antihistamine for allergy relief. Treats hay fever, hives, and allergic reactions.",
-        category: "Cold & Flu",
-        price: 6.99,
-        stock: 120,
-        manufacturer: "AllergyFree",
-        dosage: "1 tablet once daily",
-        sideEffects: "Drowsiness, dry mouth",
-        requiresPrescription: false,
-      },
-      {
-        name: "Omeprazole 20mg",
-        description: "Proton pump inhibitor for acid reflux and heartburn. Reduces stomach acid production.",
-        category: "Digestive Health",
-        price: 11.99,
-        stock: 60,
-        manufacturer: "DigestCare",
-        dosage: "1 capsule before breakfast",
-        sideEffects: "Headache, nausea, diarrhea",
-        requiresPrescription: true,
-      },
-      {
-        name: "Metformin 500mg",
-        description: "First-line treatment for type 2 diabetes. Helps control blood sugar levels.",
-        category: "Diabetes",
-        price: 9.99,
-        stock: 70,
-        manufacturer: "DiabetesCare",
-        dosage: "1 tablet twice daily with meals",
-        sideEffects: "Nausea, diarrhea, stomach upset",
-        requiresPrescription: true,
-      },
-      {
-        name: "Aspirin 75mg",
-        description: "Low-dose aspirin for heart health. Prevents blood clots and reduces heart attack risk.",
-        category: "Heart Health",
-        price: 4.99,
-        stock: 200,
-        manufacturer: "CardioHealth",
-        dosage: "1 tablet once daily",
-        sideEffects: "Stomach irritation, bleeding risk",
-        requiresPrescription: false,
-      },
-      {
-        name: "Multivitamin Complex",
-        description: "Complete daily vitamin and mineral supplement. Supports overall health and wellbeing.",
-        category: "Vitamins",
-        price: 14.99,
-        stock: 90,
-        manufacturer: "HealthPlus",
-        dosage: "1 tablet daily with food",
-        sideEffects: "Rare: upset stomach",
-        requiresPrescription: false,
-      },
-      {
-        name: "Hydrocortisone Cream 1%",
-        description: "Topical steroid for skin inflammation. Treats eczema, dermatitis, and insect bites.",
-        category: "Skin Care",
-        price: 8.49,
-        stock: 45,
-        manufacturer: "DermaCare",
-        dosage: "Apply thin layer 2-3 times daily",
-        sideEffects: "Skin thinning with prolonged use",
-        requiresPrescription: false,
-      },
-      {
-        name: "Bandages Assorted Pack",
-        description: "Sterile adhesive bandages in various sizes. Essential for minor cuts and wounds.",
-        category: "First Aid",
-        price: 3.99,
-        stock: 300,
-        manufacturer: "FirstAid Pro",
-        dosage: "Apply to clean, dry wound",
-        sideEffects: "None",
-        requiresPrescription: false,
-      },
-      {
-        name: "Ciprofloxacin 500mg",
-        description: "Fluoroquinolone antibiotic for serious bacterial infections. Treats urinary and respiratory infections.",
-        category: "Antibiotics",
-        price: 15.99,
-        stock: 40,
-        manufacturer: "MediPharm",
-        dosage: "1 tablet twice daily",
-        sideEffects: "Nausea, diarrhea, dizziness",
-        requiresPrescription: true,
-      },
-    ];
-
+    console.log("Seeding medicines...");
     await Medicine.insertMany(medicines);
+    console.log(`${medicines.length} Medicines seeded successfully`);
 
-    console.log("Created sample medicines");
-    console.log("\n=== Seed Data Summary ===");
-    console.log(`Admin User: admin@yonimedicare.com / admin123`);
-    console.log(`Regular User: user@example.com / user123`);
-    console.log(`Total Medicines: ${medicines.length}`);
-    console.log("========================\n");
+    // Only create users if everything else worked
+    console.log("Seeding users...");
+    await User.create([
+      {
+        name: "Admin User",
+        email: "admin@yonimedicare.com",
+        password: "admin123",
+        phone: "+251 911 111 111",
+        address: {
+          street: "123 Admin Street",
+          city: "Addis Ababa",
+          state: "Addis Ababa",
+          zipCode: "1000",
+        },
+        role: "admin",
+      },
+      {
+        name: "John Doe",
+        email: "user@example.com",
+        password: "user123",
+        phone: "+251 911 222 222",
+        address: {
+          street: "456 User Avenue",
+          city: "Addis Ababa",
+          state: "Addis Ababa",
+          zipCode: "1001",
+        },
+        role: "user",
+      }
+    ]);
+    console.log("Users seeded successfully");
 
+    console.log("Database Seeded Successfully!");
     process.exit(0);
   } catch (error) {
-    console.error("Error seeding database:", error);
+    console.error("SEED ERROR:", error.message);
+    if (error.errors) {
+      console.error("VALIDATION ERRORS:", Object.keys(error.errors).map(key => `${key}: ${error.errors[key].message}`));
+    }
     process.exit(1);
   }
 };

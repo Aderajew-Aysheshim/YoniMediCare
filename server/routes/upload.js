@@ -3,11 +3,13 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const { protect } = require("../middleware/authMiddleware");
+const { admin } = require("../middleware/adminMiddleware");
 
 // Configure multer for file upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/prescriptions/");
+    const dir = file.fieldname === 'medicine' ? 'uploads/medicines/' : 'uploads/prescriptions/';
+    cb(null, dir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -39,22 +41,23 @@ const upload = multer({
   fileFilter: fileFilter,
 });
 
-// @route   POST /api/upload/prescription
-// @desc    Upload prescription image
-// @access  Private
+// @route   POST /api/upload/medicine
+// @desc    Upload medicine image
+// @access  Private/Admin
 router.post(
-  "/prescription",
+  "/medicine",
   protect,
-  upload.single("prescription"),
+  admin,
+  upload.single("medicine"),
   (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
       }
 
-      const fileUrl = `/uploads/prescriptions/${req.file.filename}`;
+      const fileUrl = `/uploads/medicines/${req.file.filename}`;
       res.json({
-        message: "File uploaded successfully",
+        message: "Medicine image uploaded successfully",
         fileUrl: fileUrl,
       });
     } catch (error) {
