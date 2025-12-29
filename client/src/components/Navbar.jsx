@@ -47,8 +47,8 @@ const Navbar = () => {
       ? "bg-white/80 backdrop-blur-lg shadow-lg py-2 border-b border-gray-100"
       : "bg-transparent py-4 text-white"
       }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
             to="/"
@@ -66,7 +66,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="items-center hidden space-x-8 lg:flex">
             <div className="flex items-center space-x-6">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
@@ -93,7 +93,7 @@ const Navbar = () => {
             </div>
 
             {/* Secondary Links */}
-            <div className="hidden xl:flex items-center space-x-4 border-l pl-4 border-slate-200/20">
+            <div className="items-center hidden pl-4 space-x-4 border-l xl:flex border-slate-200/20">
               {secondaryLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
@@ -115,9 +115,9 @@ const Navbar = () => {
               })}
             </div>
 
-            <div className="flex items-center space-x-4 border-l pl-4 sm:pl-10 border-slate-200/20">
+            <div className="flex items-center pl-4 space-x-4 border-l sm:pl-10 border-slate-200/20">
               {/* Cart */}
-              <Link to="/cart" className="relative p-2 sm:p-3 rounded-xl transition-all group overflow-hidden">
+              <Link to="/cart" className="relative p-2 overflow-hidden transition-all sm:p-3 rounded-xl group">
                 <FaShoppingCart className={`text-sm sm:text-lg ${!isScrolled && location.pathname === "/" ? "text-white" : "text-slate-600 group-hover:text-emerald-600"
                   }`} />
                 {cartCount > 0 && (
@@ -169,10 +169,10 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden glass rounded-3xl mt-2 p-4 sm:p-6 space-y-4 animate-fade-in shadow-2xl border border-white/20">
+          <div className="p-4 mt-2 space-y-4 border shadow-2xl md:hidden glass rounded-3xl sm:p-6 animate-fade-in border-white/20">
             {/* Main Navigation */}
             <div className="space-y-3">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider">Main Menu</h3>
+              <h3 className="text-xs font-black tracking-wider text-gray-400 uppercase">Main Menu</h3>
               {navLinks.map((link) => {
                 if (link.protected && !user) return null;
                 if (link.adminOnly && (!user || user.role !== "admin")) return null;
@@ -181,7 +181,7 @@ const Navbar = () => {
                     key={link.path}
                     to={link.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className="block text-lg sm:text-xl font-bold text-gray-800 hover:text-emerald-600 transition-colors py-2"
+                    className="block py-2 text-lg font-bold text-gray-800 transition-colors sm:text-xl hover:text-emerald-600"
                   >
                     {link.name}
                   </Link>
@@ -190,14 +190,14 @@ const Navbar = () => {
             </div>
 
             {/* Secondary Navigation */}
-            <div className="space-y-3 pt-4 border-t border-gray-100">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider">Company</h3>
+            <div className="pt-4 space-y-3 border-t border-gray-100">
+              <h3 className="text-xs font-black tracking-wider text-gray-400 uppercase">Company</h3>
               {secondaryLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsMenuOpen(false)}
-                  className="block text-base sm:text-lg font-medium text-gray-600 hover:text-emerald-600 transition-colors py-2"
+                  className="block py-2 text-base font-medium text-gray-600 transition-colors sm:text-lg hover:text-emerald-600"
                 >
                   {link.name}
                 </Link>
@@ -207,7 +207,7 @@ const Navbar = () => {
             <Link
               to="/cart"
               onClick={() => setIsMenuOpen(false)}
-              className="flex justify-between items-center text-lg sm:text-xl font-bold text-gray-800 pt-4 border-t border-gray-100"
+              className="flex items-center justify-between pt-4 text-lg font-bold text-gray-800 border-t border-gray-100 sm:text-xl"
             >
               <span>Cart</span>
               <span className="bg-emerald-100 text-emerald-700 px-3 py-0.5 rounded-full text-sm">{cartCount} items</span>
@@ -217,7 +217,7 @@ const Navbar = () => {
               {user ? (
                 <div className="space-y-4 text-center">
                   <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-2xl font-black mb-2">
+                    <div className="flex items-center justify-center w-16 h-16 mb-2 text-2xl font-black rounded-full bg-emerald-100 text-emerald-600">
                       @
                     </div>
                     <p className="font-black text-gray-800 uppercase tracking-widest text-[10px]">{user.name}</p>
