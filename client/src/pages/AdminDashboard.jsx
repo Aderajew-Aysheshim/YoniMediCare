@@ -1,235 +1,191 @@
 import { useState, useEffect } from "react";
-import api from "../utils/api";
-import { FaPlus, FaEdit, FaTrash, FaBox, FaShoppingBag, FaDollarSign, FaChartBar, FaCloudUploadAlt } from "react-icons/fa";
-import { MdDashboard, MdInventory, MdListAlt, MdNotifications, MdCheck, MdClose, MdVisibility, MdLocalPharmacy } from "react-icons/md";
+import { Link } from "react-router-dom";
+import {
+  FaBox, FaShoppingCart, FaUsers, FaChartLine, FaBell,
+  FaSearch, FaCog, FaUserCircle, FaSignOutAlt, FaPlus,
+  FaChevronDown, FaFilter, FaFileExport, FaFileImport, FaSyncAlt
+} from "react-icons/fa";
+import {
+  MdDashboard, MdInventory, MdLocalShipping,
+  MdPayment, MdPeople, MdSettings, MdMenu
+} from "react-icons/md";
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState("overview");
-  const [medicines, setMedicines] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [showMedicineForm, setShowMedicineForm] = useState(false);
-  const [editingMedicine, setEditingMedicine] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [medicineForm, setMedicineForm] = useState({
-    name: "",
-    description: "",
-    category: "Pain Relief",
-    price: "",
-    stock: "",
-    manufacturer: "",
-    requiresPrescription: false,
-    dosage: "",
-    sideEffects: "",
-    image: "",
+  // Sample data - replace with API calls
+  const [stats, setStats] = useState({
+    totalSales: 12540,
+    totalOrders: 324,
+    totalProducts: 45,
+    totalUsers: 1289
   });
 
-  useEffect(() => {
-    fetchInitialData();
-  }, []);
+  const [recentOrders, setRecentOrders] = useState([
+    { id: 1, customer: 'John Doe', date: '2023-06-15', amount: 125.99, status: 'Completed', payment: 'Paid' },
+    { id: 2, customer: 'Jane Smith', date: '2023-06-14', amount: 89.50, status: 'Processing', payment: 'Paid' },
+    { id: 3, customer: 'Robert Johnson', date: '2023-06-14', amount: 210.00, status: 'Shipped', payment: 'Paid' },
+    { id: 4, customer: 'Emily Davis', date: '2023-06-13', amount: 156.75, status: 'Pending', payment: 'Pending' },
+    { id: 5, customer: 'Michael Brown', date: '2023-06-12', amount: 78.20, status: 'Completed', payment: 'Paid' },
+  ]);
 
-  const fetchInitialData = async () => {
-    setLoading(true);
-    await Promise.all([
-      fetchStats(),
-      fetchMedicines(),
-      fetchOrders()
-    ]);
-    setLoading(false);
+  const [topProducts, setTopProducts] = useState([
+    { id: 1, name: 'Paracetamol 500mg', category: 'Pain Relief', price: 5.99, stock: 45, sales: 128 },
+    { id: 2, name: 'Amoxicillin 250mg', category: 'Antibiotics', price: 8.50, stock: 32, sales: 98 },
+    { id: 3, name: 'Ibuprofen 200mg', category: 'Pain Relief', price: 4.99, stock: 67, sales: 112 },
+    { id: 4, name: 'Omeprazole 20mg', category: 'Antacids', price: 7.25, stock: 28, sales: 76 },
+    { id: 5, name: 'Cetirizine 10mg', category: 'Allergy', price: 6.75, stock: 51, sales: 89 },
+  ]);
+
+  // Toggle sidebar on mobile
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
 
-  const fetchStats = async () => {
-    try {
-      const response = await api.get("/orders/admin/stats");
-      setStats(response.data);
-    } catch (error) {
-      console.error("Error fetching stats:", error);
-    }
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'ETB',
+      minimumFractionDigits: 2
+    }).format(amount);
   };
 
-  const fetchMedicines = async () => {
-    try {
-      const response = await api.get("/medicines");
-      setMedicines(response.data);
-    } catch (error) {
-      console.error("Error fetching medicines:", error);
-    }
+  // Format date
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
-  const fetchOrders = async () => {
-    try {
-      const response = await api.get("/orders/admin/all");
-      setOrders(response.data);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
-  };
-
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Preview
-    const reader = new FileReader();
-    reader.onloadend = () => setImagePreview(reader.result);
-    reader.readAsDataURL(file);
-
-    // Upload
-    setUploadingImage(true);
-    const formData = new FormData();
-    formData.append("medicine", file);
-
-    try {
-      const response = await api.post("/upload/medicine", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setMedicineForm({ ...medicineForm, image: response.data.fileUrl });
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Failed to upload image");
-    } finally {
-      setUploadingImage(false);
-    }
-  };
-
-  const handleMedicineSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingMedicine) {
-        await api.put(`/medicines/${editingMedicine._id}`, medicineForm);
-      } else {
-        await api.post("/medicines", medicineForm);
-      }
-      setShowMedicineForm(false);
-      setEditingMedicine(null);
-      setImagePreview(null);
-      fetchMedicines();
-      fetchStats();
-    } catch (error) {
-      console.error("Error saving medicine:", error);
-      alert("Failed to save medicine");
-    }
-  };
-
-  const handleEditMedicine = (medicine) => {
-    setEditingMedicine(medicine);
-    setMedicineForm(medicine);
-    setImagePreview(medicine.image);
-    setShowMedicineForm(true);
-  };
-
-  const handleDeleteMedicine = async (id) => {
-    if (window.confirm("Are you sure you want to delete this medicine?")) {
-      try {
-        await api.delete(`/medicines/${id}`);
-        fetchMedicines();
-        fetchStats();
-      } catch (error) {
-        console.error("Error deleting medicine:", error);
-      }
-    }
-  };
-
-  const handleUpdateOrderStatus = async (orderId, status) => {
-    try {
-      await api.put(`/orders/${orderId}/status`, { status });
-      fetchOrders();
-      fetchStats();
-    } catch (error) {
-      console.error("Error updating order status:", error);
-    }
-  };
-
-  const handleConfirmPayment = async (orderId) => {
-    try {
-      await api.put(`/orders/${orderId}/confirm-payment`, { method: "manual" });
-      fetchOrders();
-      fetchStats();
-    } catch (error) {
-      console.error("Error confirming payment:", error);
-      alert("Verification Failed: System root could not authorize payment.");
-    }
-  };
-
-  const getStatusStyle = (status) => {
-    const styles = {
-      pending: "bg-amber-100 text-amber-700 border-amber-200",
-      processing: "bg-blue-100 text-blue-700 border-blue-200",
-      shipped: "bg-indigo-100 text-indigo-700 border-indigo-200",
-      delivered: "bg-emerald-100 text-emerald-700 border-emerald-200",
-      cancelled: "bg-rose-100 text-rose-700 border-rose-200",
+  // Get status color
+  const getStatusColor = (status) => {
+    const colors = {
+      'Completed': 'bg-green-100 text-green-800',
+      'Processing': 'bg-blue-100 text-blue-800',
+      'Shipped': 'bg-purple-100 text-purple-800',
+      'Pending': 'bg-yellow-100 text-yellow-800',
+      'Cancelled': 'bg-red-100 text-red-800'
     };
-    return styles[status] || "bg-gray-100 text-gray-700 border-gray-200";
+    return colors[status] || 'bg-gray-100 text-gray-800';
   };
-
-  if (loading) return (
-    <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
-      <div className="flex flex-col items-center">
-        <div className="w-16 h-16 border-4 border-emerald-600 border-b-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-emerald-900 font-black uppercase tracking-widest text-xs">Accessing Command Center...</p>
-      </div>
-    </div>
-  );
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex">
-      {/* Elite Sidebar - Advanced Health OS */}
-      <aside className="w-80 bg-gray-900 text-white flex flex-col fixed h-full z-20 shadow-[20px_0_60px_-15px_rgba(0,0,0,0.1)]">
-        <div className="p-10 border-b border-white/5">
-          <div className="flex items-center space-x-4 mb-4 group cursor-pointer">
-            <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/20 group-hover:scale-110 transition-transform duration-500">
-              <MdLocalPharmacy className="text-3xl" />
-            </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tighter uppercase leading-none">MediConsole</h1>
-              <p className="text-[9px] font-bold text-emerald-500 tracking-[0.2em] mt-1.5 uppercase">Clinical System OS</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2 bg-white/5 px-4 py-2 rounded-xl mt-6 border border-white/5">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span className="text-[9px] font-black text-emerald-100 uppercase tracking-widest">Live Data Feed Active</span>
-          </div>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-gray-800 text-white transition-all duration-300 ease-in-out`}>
+        <div className="p-4 flex items-center justify-between">
+          {sidebarOpen && <h1 className="text-xl font-bold">YoniMediCare</h1>}
+          <button
+            onClick={toggleSidebar}
+            className="p-2 rounded-lg hover:bg-gray-700"
+          >
+            <MdMenu className="text-2xl" />
+          </button>
         </div>
 
-        <nav className="flex-1 px-6 space-y-3 mt-10">
+        <nav className="mt-6">
           {[
-            { id: "overview", label: "Strategy Room", icon: MdDashboard, desc: "Global Analytics" },
-            { id: "medicines", label: "Catalog Hub", icon: MdInventory, desc: "Stock Manifests" },
-            { id: "orders", label: "Logistics Hub", icon: MdListAlt, desc: "Active Shipments" },
-          ].map((item) => (
+            { icon: <MdDashboard className="text-xl" />, name: 'Dashboard', active: activeTab === 'dashboard' },
+            { icon: <FaBox className="text-lg" />, name: 'Products', active: activeTab === 'products' },
+            { icon: <FaShoppingCart className="text-lg" />, name: 'Orders', active: activeTab === 'orders' },
+            { icon: <MdLocalShipping className="text-xl" />, name: 'Shipping', active: activeTab === 'shipping' },
+            { icon: <MdPayment className="text-xl" />, name: 'Payments', active: activeTab === 'payments' },
+            { icon: <FaUsers className="text-lg" />, name: 'Customers', active: activeTab === 'customers' },
+            { icon: <FaChartLine className="text-lg" />, name: 'Analytics', active: activeTab === 'analytics' },
+            { icon: <MdSettings className="text-xl" />, name: 'Settings', active: activeTab === 'settings' },
+          ].map((item, index) => (
             <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center space-x-4 px-6 py-5 rounded-[2rem] transition-all group ${activeTab === item.id
-                ? 'bg-gray-900 text-white shadow-2xl shadow-gray-900/40 translate-x-3'
-                : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+              key={index}
+              onClick={() => setActiveTab(item.name.toLowerCase())}
+              className={`flex items-center w-full px-6 py-3 text-left transition-colors duration-200 ${item.active ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                 }`}
             >
-              <item.icon className={`text-2xl ${activeTab === item.id ? 'text-emerald-400' : 'group-hover:text-emerald-600'}`} />
-              <div className="text-left">
-                <p className="font-black text-[11px] uppercase tracking-widest">{item.label}</p>
-                <p className={`text-[8px] font-bold uppercase tracking-tight ${activeTab === item.id ? 'text-white/40' : 'text-gray-300'}`}>{item.desc}</p>
-              </div>
+              <span className="mr-4">{item.icon}</span>
+              {sidebarOpen && <span>{item.name}</span>}
             </button>
           ))}
         </nav>
+      </div>
 
-        <div className="p-10">
-          <div className="bg-emerald-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
-            <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-800 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
-            <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-4">Core Frequency</p>
-            <div className="flex items-center space-x-3">
-              <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></div>
-              <span className="text-xs font-black tracking-widest">LIVE DATA FEED</span>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Navigation */}
+        <header className="bg-white shadow-sm">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-gray-800">
+                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+              </h1>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <FaSearch className="absolute left-3 top-3 text-gray-400" />
+              </div>
+
+              <button className="p-2 text-gray-600 hover:text-gray-800 relative">
+                <FaBell className="text-xl" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              </button>
+
+              <div className="flex items-center space-x-2">
+                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                  <FaUserCircle className="text-2xl" />
+                </div>
+                {sidebarOpen && (
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">Admin User</span>
+                    <span className="text-xs text-gray-500">Administrator</span>
+                  </div>
+                )}
+                <button className="text-gray-600 hover:text-gray-800">
+                  <FaChevronDown className="text-sm" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </aside>
+        </header>
+        {id: "orders", label: "Logistics Hub", icon: MdListAlt, desc: "Active Shipments" },
+          ].map((item) => (
+        <button
+          key={item.id}
+          onClick={() => setActiveTab(item.id)}
+          className={`w-full flex items-center space-x-4 px-6 py-5 rounded-[2rem] transition-all group ${activeTab === item.id
+            ? 'bg-gray-900 text-white shadow-2xl shadow-gray-900/40 translate-x-3'
+            : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+        >
+          <item.icon className={`text-2xl ${activeTab === item.id ? 'text-emerald-400' : 'group-hover:text-emerald-600'}`} />
+          <div className="text-left">
+            <p className="font-black text-[11px] uppercase tracking-widest">{item.label}</p>
+            <p className={`text-[8px] font-bold uppercase tracking-tight ${activeTab === item.id ? 'text-white/40' : 'text-gray-300'}`}>{item.desc}</p>
+          </div>
+        </button>
+          ))}
+      </nav>
 
-      {/* Main Content Pane */}
+      <div className="p-10">
+        <div className="bg-emerald-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
+          <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-800 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+          <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-4">Core Frequency</p>
+          <div className="flex items-center space-x-3">
+            <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></div>
+            <span className="text-xs font-black tracking-widest">LIVE DATA FEED</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+      {/* Main Content Pane */ }
       <main className="flex-1 ml-80 p-12 lg:p-16">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
           <div>
@@ -565,12 +521,132 @@ const AdminDashboard = () => {
                     )}
                   </div>
                 </div>
+                <div className="p-3 rounded-full bg-gray-100">
+                  {stat.icon}
+                </div>
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Recent Orders */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-lg font-semibold">Recent Orders</h2>
+              <button className="text-sm text-blue-600 hover:text-blue-800">View All</button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order #</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {recentOrders.map((order) => (
+                    <tr key={order.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">#{order.id}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.date)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(order.amount)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {order.payment === 'Paid' ? (
+                          <span className="text-green-500">Paid</span>
+                        ) : (
+                          <span className="text-yellow-500">Pending</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        )}
-      </main>
+
+          {/* Top Products */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-lg font-semibold">Top Selling Products</h2>
+              <button className="text-sm text-blue-600 hover:text-blue-800">View All</button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {topProducts.map((product) => (
+                    <tr key={product.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
+                            <FaBox className="text-gray-500" />
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.category}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(product.price)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          product.stock > 20 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {product.stock} in stock
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{product.sales} sold</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+  {/* Recent Activity */ }
+  <div className="bg-white rounded-lg shadow">
+    <div className="p-4 border-b border-gray-200">
+      <h2 className="text-lg font-semibold">Recent Activity</h2>
     </div>
+    <div className="p-4">
+      <div className="space-y-4">
+        {[/* ... */].map((activity) => (
+          <div key={activity.id} className="flex items-start pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
+              {activity.icon}
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-900">
+                <span className="font-semibold">{activity.user}</span> {activity.action}
+              </p>
+              <p className="text-xs text-gray-500">{activity.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+      </main >
+    </div >
   );
 };
 
