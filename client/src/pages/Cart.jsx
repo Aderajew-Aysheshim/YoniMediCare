@@ -45,20 +45,33 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] pt-28 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-          <div>
-            <h1 className="text-5xl font-black text-gray-900 mb-2 tracking-tighter uppercase">My Health Hub</h1>
-            <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Review your selected treatments ({cartItems.length} items)</p>
+    <div className="min-h-screen bg-[#f8fafc]">
+      {/* Institutional Manifest Header */}
+      <div className="bg-[#020617] pt-28 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_100%,rgba(16,185,129,0.1),transparent)]"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+            <div>
+              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 mb-6 font-black uppercase tracking-widest text-[10px] text-emerald-400">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span>Active Resource Manifest</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase leading-[0.9]">
+                MY <span className="text-emerald-500">MANIFEST</span>
+              </h1>
+              <p className="text-slate-400 text-sm mt-4 font-medium uppercase tracking-[0.2em]">Transaction relay awaiting authorization ({cartItems.length} entries)</p>
+            </div>
+            <button
+              onClick={clearCart}
+              className="text-white hover:text-red-400 font-black text-[10px] tracking-widest uppercase py-3 px-6 bg-white/5 border border-white/10 rounded-2xl transition-all backdrop-blur-md"
+            >
+              PURGE MANIFEST
+            </button>
           </div>
-          <button
-            onClick={clearCart}
-            className="text-red-500 hover:text-red-700 font-black text-xs tracking-widest uppercase py-2 px-4 bg-red-50 rounded-xl transition-all"
-          >
-            Purge Cart
-          </button>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 pb-20">
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Cart Items */}
@@ -66,64 +79,65 @@ const Cart = () => {
             {cartItems.map((item) => (
               <div
                 key={item.medicine._id}
-                className="group bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8 hover:shadow-xl transition-all duration-500"
+                className="group bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 p-8 flex flex-col sm:flex-row items-center space-y-6 sm:space-y-0 sm:space-x-10 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all duration-700"
               >
-                <div className="relative w-32 h-32 flex-shrink-0">
+                <div className="relative w-36 h-36 flex-shrink-0 bg-slate-50 rounded-[2rem] p-4 flex items-center justify-center border border-slate-50 shadow-inner overflow-hidden">
                   <img
                     src={item.medicine.image || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=200"}
                     alt={item.medicine.name}
-                    className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500 shadow-sm"
+                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000"
                   />
                   {item.medicine.requiresPrescription && (
-                    <div className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-lg">
+                    <div className="absolute top-4 left-4 bg-slate-900 text-white p-2 rounded-xl shadow-xl border border-white/20">
                       <MdSecurity className="text-xs" />
                     </div>
                   )}
                 </div>
 
                 <div className="flex-1 text-center sm:text-left">
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 mb-2 block">
+                    {item.medicine.category}
+                  </span>
                   <Link
                     to={`/medicines/${item.medicine._id}`}
-                    className="text-xl font-black text-gray-900 hover:text-emerald-600 transition-colors tracking-tight"
+                    className="text-2xl font-black text-slate-900 hover:text-emerald-600 transition-colors tracking-tight uppercase"
                   >
                     {item.medicine.name}
                   </Link>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md inline-block mt-2">
-                    {item.medicine.category}
-                  </p>
-                  <p className="text-emerald-600 font-black text-lg mt-3">
-                    ${item.medicine.price.toFixed(2)} <span className="text-gray-300 text-xs font-bold">/ unit</span>
+                  <p className="text-slate-900 font-black text-xl mt-4">
+                    {item.medicine.price.toLocaleString()} <span className="text-slate-300 text-xs uppercase tracking-widest">ETB / Unit</span>
                   </p>
                 </div>
 
-                <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-8">
                   {/* Qty Manager */}
-                  <div className="bg-gray-50 p-1.5 rounded-2xl flex items-center space-x-4">
+                  <div className="bg-slate-50 p-2 rounded-[1.5rem] flex items-center space-x-5 border border-slate-100">
                     <button
                       onClick={() => updateQuantity(item.medicine._id, item.quantity - 1)}
-                      className="bg-white hover:bg-emerald-50 text-gray-700 w-10 h-10 rounded-xl font-bold shadow-sm transition-all"
+                      className="bg-white hover:text-emerald-600 text-slate-400 w-12 h-12 rounded-xl font-black shadow-sm transition-all active:scale-90"
                     >
                       <FaMinus className="mx-auto text-xs" />
                     </button>
-                    <span className="w-6 text-center font-black text-lg">{item.quantity}</span>
+                    <span className="w-6 text-center font-black text-xl text-slate-900">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.medicine._id, item.quantity + 1)}
                       disabled={item.quantity >= item.medicine.stock}
-                      className="bg-white hover:bg-emerald-50 text-gray-700 w-10 h-10 rounded-xl font-bold shadow-sm transition-all disabled:opacity-30"
+                      className="bg-white hover:text-emerald-600 text-slate-400 w-12 h-12 rounded-xl font-black shadow-sm transition-all disabled:opacity-30 active:scale-90"
                     >
                       <FaPlus className="mx-auto text-xs" />
                     </button>
                   </div>
 
-                  <div className="text-right min-w-[100px]">
-                    <p className="text-2xl font-black text-gray-900 tracking-tighter">
-                      ${(item.medicine.price * item.quantity).toFixed(2)}
+                  <div className="text-right min-w-[140px]">
+                    <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest block mb-1">Row Total</span>
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter">
+                      {(item.medicine.price * item.quantity).toLocaleString()} <span className="text-xs text-slate-400">ETB</span>
                     </p>
                   </div>
 
                   <button
                     onClick={() => removeFromCart(item.medicine._id)}
-                    className="p-3 bg-red-50 text-red-400 hover:text-red-600 hover:bg-red-100 rounded-xl transition-all"
+                    className="p-4 bg-slate-50 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
                   >
                     <FaTrash />
                   </button>
@@ -152,30 +166,30 @@ const Cart = () => {
 
           {/* Checkout Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-emerald-900/5 border border-gray-100 p-8 sticky top-28 overflow-hidden group">
-              {/* Card Design Element */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -translate-y-1/2 translate-x-1/2 -z-10 group-hover:scale-150 transition-transform duration-700"></div>
+            <div className="bg-white rounded-[3rem] shadow-[0_40px_100px_-20px_rgba(2,6,23,0.15)] border border-slate-100 p-10 sticky top-28 overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full -translate-y-1/2 translate-x-1/2 -z-10"></div>
 
-              <h2 className="text-3xl font-black text-gray-900 mb-8 tracking-tighter uppercase">Summary</h2>
+              <h2 className="text-xs font-black text-slate-400 mb-10 tracking-[0.4em] uppercase">Relay Summary</h2>
 
-              <div className="space-y-6 mb-8">
-                <div className="flex justify-between text-gray-400 font-bold uppercase tracking-widest text-[10px]">
-                  <span>Subtotal</span>
-                  <span className="text-gray-900 text-base font-black">${subtotal.toFixed(2)}</span>
+              <div className="space-y-8 mb-10">
+                <div className="flex justify-between items-end">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol Subtotal</span>
+                  <span className="text-xl font-black text-slate-900">{subtotal.toLocaleString()} ETB</span>
                 </div>
-                <div className="flex justify-between text-gray-400 font-bold uppercase tracking-widest text-[10px]">
-                  <span>Delivery Fee</span>
-                  <span className="text-gray-900 text-base font-black">${SHIPPING_COST.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-gray-400 font-bold uppercase tracking-widest text-[10px]">
-                  <span>Tax (Included)</span>
-                  <span className="text-gray-900 text-base font-black">$0.00</span>
+                <div className="flex justify-between items-end">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Distribution Fee</span>
+                  <span className="text-xl font-black text-slate-900">{SHIPPING_COST.toLocaleString()} ETB</span>
                 </div>
 
-                <div className="border-t border-gray-100 pt-6 flex justify-between">
-                  <span className="text-xl font-black text-gray-900 tracking-tighter uppercase">Total Amount</span>
-                  <div className="text-right">
-                    <span className="text-4xl font-black text-emerald-600 tracking-tighter">${total.toFixed(2)}</span>
+                <div className="h-px bg-slate-100 w-full"></div>
+
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-3">Authorize Manifest Total</span>
+                  <div className="flex flex-col">
+                    <span className="text-5xl font-black text-slate-900 tracking-tighter">
+                      {total.toLocaleString()}
+                    </span>
+                    <span className="text-sm font-black text-slate-300 uppercase tracking-widest mt-1">Ethiopian Birr</span>
                   </div>
                 </div>
               </div>
@@ -183,22 +197,26 @@ const Cart = () => {
               <div className="space-y-4">
                 <button
                   onClick={handleCheckout}
-                  className="btn-primary w-full py-5 rounded-2xl text-xl flex items-center justify-center space-x-3 shadow-emerald-200"
+                  className="w-full py-6 bg-slate-900 text-white rounded-3xl font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center space-x-4 shadow-2xl shadow-slate-900/40 hover:bg-emerald-600 hover:-translate-y-2 transition-all duration-500 group"
                 >
-                  <span>SECURE CHECKOUT</span>
-                  <FaArrowRight />
+                  <MdSecurity className="text-xl group-hover:scale-125 transition-transform" />
+                  <span>INITIATE AUTHORIZATION</span>
                 </button>
                 <Link
                   to="/medicines"
-                  className="w-full flex items-center justify-center py-4 text-emerald-600 font-black text-sm uppercase tracking-widest hover:underline"
+                  className="w-full flex items-center justify-center py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-emerald-600 transition-colors"
                 >
-                  KEEP EXPLORING
+                  Return to Manifest Search
                 </Link>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-gray-50 flex justify-center space-x-4 grayscale opacity-30">
-                <MdOutlinePayments className="text-2xl" />
-                <div className="font-black text-[10px] uppercase tracking-widest mt-1">PCI Compliant System</div>
+              <div className="mt-12 pt-8 border-t border-slate-50 flex flex-col items-center">
+                <div className="flex space-x-6 grayscale opacity-20 mb-4">
+                  <MdOutlinePayments className="text-3xl" />
+                  <MdSecurity className="text-3xl" />
+                  <MdLocalShipping className="text-3xl" />
+                </div>
+                <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Institutional Grade Security</span>
               </div>
             </div>
           </div>

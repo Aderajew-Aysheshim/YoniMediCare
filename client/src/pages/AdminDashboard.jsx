@@ -260,20 +260,23 @@ const AdminDashboard = () => {
             {/* High-Fidelity Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-20">
               {[
-                { label: "Total Revenue", value: `$${stats.totalRevenue.toFixed(0)}`, icon: FaDollarSign, color: "emerald", trend: "+12.5%" },
-                { label: "Orders Dispatched", value: stats.totalOrders, icon: FaShoppingBag, color: "blue", trend: "+8.2%" },
-                { label: "Active SKUs", value: medicines.length, icon: FaBox, color: "amber", trend: "Stable" },
-                { label: "Growth Index", value: "4.2%", icon: FaChartBar, color: "rose", trend: "+0.4%" },
+                { label: "Gross Manifest Valuation", value: `${stats.totalRevenue.toLocaleString()}`, unit: "ETB", icon: FaDollarSign, color: "emerald", trend: "+12.5%" },
+                { label: "Relayed Protocols", value: stats.totalOrders, unit: "UNITS", icon: FaShoppingBag, color: "blue", trend: "+8.2%" },
+                { label: "Active Inventory SKUs", value: medicines.length, unit: "ENTRIES", icon: FaBox, color: "amber", trend: "Stable" },
+                { label: "Efficiency Index", value: "98.4%", unit: "SCORE", icon: FaChartBar, color: "rose", trend: "+0.4%" },
               ].map((stat, i) => (
-                <div key={i} className="bg-white p-10 rounded-[3rem] shadow-xl shadow-gray-200/30 border border-gray-50 relative overflow-hidden group">
+                <div key={i} className="bg-white p-10 rounded-[3rem] shadow-xl shadow-slate-200/30 border border-slate-50 relative overflow-hidden group">
                   <div className={`absolute top-0 right-0 w-24 h-24 bg-${stat.color}-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-700`}></div>
                   <div className={`w-14 h-14 bg-${stat.color}-100 rounded-2xl flex items-center justify-center mb-8`}>
                     <stat.icon className={`text-2xl text-${stat.color}-600`} />
                   </div>
-                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">{stat.label}</h4>
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">{stat.label}</h4>
                   <div className="flex items-end justify-between">
-                    <p className="text-4xl font-black text-gray-900 tracking-tighter">{stat.value}</p>
-                    <span className={`text-[10px] font-black px-2 py-1 bg-${stat.color}-50 text-${stat.color}-600 rounded-lg`}>{stat.trend}</span>
+                    <div className="flex flex-col">
+                      <p className="text-4xl font-black text-slate-900 tracking-tighter">{stat.value}</p>
+                      <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-1">{stat.unit}</span>
+                    </div>
+                    <span className={`text-[10px] font-black px-3 py-1 bg-${stat.color}-50 text-${stat.color}-600 rounded-xl`}>{stat.trend}</span>
                   </div>
                 </div>
               ))}
@@ -299,8 +302,8 @@ const AdminDashboard = () => {
                       className="w-full bg-emerald-600 rounded-2xl transition-all duration-700 hover:bg-emerald-900 cursor-pointer relative shadow-lg shadow-emerald-100"
                       style={{ height: `${Math.max(10, (item.revenue / Math.max(...stats.revenueByMonth.map(r => r.revenue))) * 100)}%` }}
                     >
-                      <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 whitespace-nowrap bg-gray-900 text-white text-[10px] font-black px-4 py-2 rounded-xl">
-                        ${item.revenue.toFixed(0)}
+                      <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 whitespace-nowrap bg-slate-900 text-white text-[10px] font-black px-4 py-2 rounded-xl border border-white/10 shadow-2xl">
+                        {item.revenue.toLocaleString()} ETB
                       </div>
                     </div>
                     <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-6">M-{item._id}</span>
@@ -364,12 +367,12 @@ const AdminDashboard = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Market Value ($)</label>
-                        <input type="number" step="0.01" value={medicineForm.price} onChange={(e) => setMedicineForm({ ...medicineForm, price: e.target.value })} className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl font-bold" required />
+                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Manifest Value (ETB)</label>
+                        <input type="number" step="0.01" value={medicineForm.price} onChange={(e) => setMedicineForm({ ...medicineForm, price: e.target.value })} className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 transition-all font-black text-slate-900 outline-none" required />
                       </div>
                       <div>
-                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Units in Stock</label>
-                        <input type="number" value={medicineForm.stock} onChange={(e) => setMedicineForm({ ...medicineForm, stock: e.target.value })} className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl font-bold" required />
+                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Logistic Stock (Units)</label>
+                        <input type="number" value={medicineForm.stock} onChange={(e) => setMedicineForm({ ...medicineForm, stock: e.target.value })} className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 transition-all font-black text-slate-900 outline-none" required />
                       </div>
                       <div className="md:col-span-2">
                         <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Clinical Description</label>
@@ -422,13 +425,15 @@ const AdminDashboard = () => {
                           {item.category}
                         </span>
                       </td>
-                      <td className="px-10 py-6 text-emerald-600 font-black tracking-tighter text-lg">${item.price.toFixed(2)}</td>
+                      <td className="px-10 py-6 text-emerald-600 font-black tracking-tighter text-xl">
+                        {item.price.toLocaleString()} <span className="text-[10px] text-slate-300 uppercase tracking-widest">ETB</span>
+                      </td>
                       <td className="px-10 py-6">
-                        <div className="flex items-center space-x-3">
-                          <div className="flex-1 bg-gray-100 h-1.5 rounded-full w-24 overflow-hidden">
-                            <div className={`h-full rounded-full ${item.stock < 10 ? 'bg-rose-500' : 'bg-emerald-500'}`} style={{ width: `${Math.min(100, item.stock)}%` }}></div>
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-1 bg-slate-100 h-2 rounded-full w-24 overflow-hidden border border-slate-50 shadow-inner">
+                            <div className={`h-full rounded-full transition-all duration-1000 ${item.stock < 10 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${Math.min(100, item.stock)}%` }}></div>
                           </div>
-                          <span className={`text-xs ${item.stock < 10 ? 'text-rose-500 animate-pulse' : 'text-gray-400'}`}>{item.stock}</span>
+                          <span className={`text-xs font-black ${item.stock < 10 ? 'text-amber-500 animate-pulse' : 'text-slate-400'}`}>{item.stock}</span>
                         </div>
                       </td>
                       <td className="px-10 py-6 text-right">
@@ -495,12 +500,15 @@ const AdminDashboard = () => {
                             </div>
                             <span className="font-black text-gray-900 uppercase text-sm">{item.medicine.name}</span>
                           </div>
-                          <span className="font-black text-emerald-600">${(item.price * item.quantity).toFixed(2)}</span>
+                          <span className="font-black text-emerald-600">{item.price.toLocaleString()} <span className="text-[9px] text-slate-300 uppercase tracking-widest">ETB</span></span>
                         </div>
                       ))}
-                      <div className="flex justify-between items-center px-6 pt-4">
-                        <span className="font-black text-gray-400 uppercase tracking-widest text-[10px]">Settlement Amount</span>
-                        <span className="text-3xl font-black text-gray-900 tracking-tighter">${order.totalAmount.toFixed(2)}</span>
+                      <div className="flex justify-between items-center px-6 pt-10">
+                        <span className="font-black text-slate-300 uppercase tracking-[0.3em] text-[10px]">Settlement Amount</span>
+                        <div className="text-right">
+                          <span className="text-4xl font-black text-slate-900 tracking-tighter">{order.totalAmount.toLocaleString()}</span>
+                          <span className="text-xs font-black text-slate-300 uppercase tracking-widest block mt-1">Ethiopian Birr</span>
+                        </div>
                       </div>
                     </div>
                   </div>

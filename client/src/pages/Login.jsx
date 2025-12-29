@@ -1,33 +1,66 @@
-import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { MdLocalPharmacy, MdArrowForward, MdLockOutline, MdEmail } from "react-icons/md";
+import { MdLocalPharmacy, MdArrowForward, MdLockOutline, MdEmail, MdSecurity } from "react-icons/md";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    code: ""
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [show2FA, setShow2FA] = useState(false);
+  const [emailSent, setEmailSent] = useState("");
 
-  const { login } = useContext(AuthContext);
+  const { login, requires2FA, verify2FA } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if redirected from 2FA required
+  useEffect(() => {
+    if (location.state?.requires2FA) {
+      setShow2FA(true);
+      setEmailSent(location.state.email);
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      await login(formData.email, formData.password);
-      navigate("/");
+      const result = await login(formData.email, formData.password);
+
+      if (result?.requires2FA) {
+        setShow2FA(true);
+        setEmailSent(formData.email);
+      } else {
+        navigate(location.state?.from || "/");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Authentication failed. Please verify credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handle2FASubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await verify2FA(formData.code);
+      navigate(location.state?.from || "/");
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid verification code. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -43,12 +76,17 @@ const Login = () => {
         <div className="relative z-10 w-full p-20 flex flex-col justify-between">
           <div>
             <div className="flex items-center space-x-3 text-white mb-8 animate-fade-in-up">
-              <MdLocalPharmacy className="text-4xl text-emerald-400" />
-              <span className="text-2xl font-black tracking-tighter uppercase">YoniMediCare</span>
+              <div className="p-2 bg-emerald-500 rounded-xl">
+                <MdLocalPharmacy className="text-3xl text-white" />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-2xl font-black tracking-tighter uppercase">Yoni<span className="text-emerald-400">Medi</span></span>
+                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-emerald-500/60">Healthcare Hub</span>
+              </div>
             </div>
-            <h2 className="text-6xl font-black text-white leading-tight tracking-tighter mb-6 animate-fade-in-up delay-100">
-              Your Health, <br />
-              Digitally <span className="text-emerald-400">Perfected.</span>
+            <h2 className="text-6xl font-black text-white leading-tight tracking-tighter mb-8 animate-fade-in-up delay-100 uppercase">
+              RESOURCES <br />
+              <span className="text-emerald-400">AUTHORIZED.</span>
             </h2>
             <p className="text-emerald-100/60 font-medium text-lg max-w-md animate-fade-in-up delay-200">
               Access your personalized pharmaceutical dashboard and manage your prescriptions with clinical precision.
@@ -128,13 +166,13 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-5 rounded-3xl bg-gray-900 text-white font-black uppercase tracking-widest text-xs shadow-xl shadow-gray-900/10 hover:bg-black hover:shadow-gray-900/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-3 disabled:opacity-70 disabled:cursor-not-allowed group"
+              className="w-full py-6 rounded-[2rem] bg-slate-900 text-white font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-slate-900/20 hover:bg-emerald-600 hover:shadow-emerald-500/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-4 disabled:opacity-70 disabled:cursor-not-allowed group"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/20 border-b-white rounded-full animate-spin"></div>
               ) : (
                 <>
-                  <span>Authorize Access</span>
+                  <span>AUTHORIZE MANIFEST ACCESS</span>
                   <MdArrowForward className="text-lg group-hover:translate-x-1 transition-transform" />
                 </>
               )}

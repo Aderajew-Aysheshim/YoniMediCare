@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, "uploads", "prescriptions");
 if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+    fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
 // Middleware
@@ -23,13 +23,13 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Database Connection
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+    .connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB Connected"))
+    .catch((err) => console.log(err));
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("YoniMediCare API is running...");
+    res.send("YoniMediCare API is running...");
 });
 
 // API Routes
@@ -41,11 +41,11 @@ app.use("/api/audit", require("./routes/audit"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!", error: err.message });
+    console.error(err.stack);
+    res.status(500).json({ message: "Something went wrong!", error: err.message });
 });
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

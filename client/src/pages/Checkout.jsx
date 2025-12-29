@@ -128,16 +128,33 @@ const Checkout = () => {
   const total = getCartTotal() + SHIPPING_COST;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] pt-28 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <Link to="/cart" className="flex items-center text-gray-400 hover:text-emerald-600 font-black text-[10px] tracking-widest uppercase mb-4 transition-colors">
-            <FaArrowLeft className="mr-2" />
-            BACK TO HUB
+    <div className="min-h-screen bg-[#f8fafc]">
+      {/* Authorization Header */}
+      <div className="bg-[#020617] pt-28 pb-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.1),transparent)]"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <Link to="/cart" className="group inline-flex items-center text-slate-400 hover:text-emerald-400 font-black text-[10px] tracking-widest uppercase mb-12 transition-all">
+            <FaArrowLeft className="mr-3 group-hover:-translate-x-2 transition-transform" />
+            RETURN TO HUB
           </Link>
-          <h1 className="text-5xl font-black text-gray-900 tracking-tighter uppercase">Finalization</h1>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div>
+              <span className="inline-block px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 mb-6 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                Security clearance required
+              </span>
+              <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase leading-[0.9]">
+                ORDER <span className="text-emerald-500">AUTHORIZATION</span>
+              </h1>
+            </div>
+            <div className="flex flex-col md:items-end">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Total Liability</span>
+              <span className="text-5xl font-black text-emerald-500">{total.toLocaleString()} <span className="text-xl text-slate-600">ETB</span></span>
+            </div>
+          </div>
         </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Checkout Form */}
           <div className="lg:col-span-2">
@@ -148,110 +165,168 @@ const Checkout = () => {
                 </div>
               )}
 
-              {/* Step 1: Delivery */}
-              <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-10">
-                <div className="flex items-center space-x-4 mb-10">
-                  <div className="bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black">1</div>
-                  <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Logistics</h2>
+              {/* Step 1: Logistics */}
+              <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-12 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[4rem] -z-10"></div>
+                <div className="flex items-center space-x-6 mb-12">
+                  <div className="bg-slate-900 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-xl">01</div>
+                  <div>
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Logistics Manifest</h2>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Designate distribution target</p>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="md:col-span-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Street Address</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Street Protocol</label>
                     <input
                       type="text"
                       name="street"
+                      placeholder="e.g., Bole Road, House 123"
                       required
                       value={deliveryAddress.street}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                      className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 transition-all font-bold text-slate-900 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">City</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Urban Zone (City)</label>
                     <input
                       type="text"
                       name="city"
+                      placeholder="e.g., Addis Ababa"
                       required
                       value={deliveryAddress.city}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                      className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 transition-all font-bold text-slate-900 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">State / Region</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Administrative Region</label>
                     <input
                       type="text"
                       name="state"
+                      placeholder="e.g., Addis Ababa"
                       required
                       value={deliveryAddress.state}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                      className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 transition-all font-bold text-slate-900 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Zip Code</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Protocol Relay Code (Zip)</label>
                     <input
                       type="text"
                       name="zipCode"
+                      placeholder="e.g., 1000"
                       required
                       value={deliveryAddress.zipCode}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                      className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 transition-all font-bold text-slate-900 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Phone</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Direct Comm Line (Phone)</label>
                     <input
                       type="tel"
                       name="phone"
+                      placeholder="e.g., +251 9..."
                       required
                       value={deliveryAddress.phone}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
+                      className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 transition-all font-bold text-slate-900 outline-none"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Step 3: Payment Method - Elite Local Integration */}
-              <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-10">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black">3</div>
-                  <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Settlement Manifest</h2>
-                </div>
-                <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-10">Select your preferred local payment gateway.</p>
+              {/* Step 2: Prescription Validation (Conditional) */}
+              {requiresPrescription && (
+                <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-12 overflow-hidden relative">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-[4rem] -z-10"></div>
+                  <div className="flex items-center space-x-6 mb-12">
+                    <div className="bg-emerald-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-xl">02</div>
+                    <div>
+                      <h2 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Verification Assets</h2>
+                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">Clinical prescription mandatory</p>
+                    </div>
+                  </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                  <div className="relative group">
+                    <input
+                      type="file"
+                      id="prescription"
+                      className="hidden"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                    />
+                    <label
+                      htmlFor="prescription"
+                      className={`block w-full border-2 border-dashed rounded-[2rem] p-12 text-center cursor-pointer transition-all ${prescriptionPreview ? 'border-emerald-500 bg-emerald-50/20' : 'border-slate-200 hover:border-emerald-400 hover:bg-slate-50'
+                        }`}
+                    >
+                      {prescriptionPreview ? (
+                        <div className="relative inline-block">
+                          <img src={prescriptionPreview} alt="Preview" className="max-h-64 rounded-2xl shadow-2xl transition-transform group-hover:scale-105" />
+                          <div className="absolute -top-4 -right-4 bg-emerald-600 text-white p-2 rounded-full shadow-xl">
+                            <FaCheck />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto shadow-inner group-hover:scale-110 transition-transform">
+                            <FaCloudUploadAlt className="text-4xl text-slate-300" />
+                          </div>
+                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Upload Authorized Manifest</p>
+                          <p className="text-xs text-slate-300 font-medium">JPEG, PNG up to 10MB</p>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Payment Method */}
+              <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-12 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[4rem] -z-10"></div>
+                <div className="flex items-center space-x-6 mb-12">
+                  <div className="bg-slate-900 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-xl">{requiresPrescription ? '03' : '02'}</div>
+                  <div>
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Settlement Protocol</h2>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Authorized transaction relay</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
                   {[
-                    { id: "telebirr", name: "Telebirr", sub: "Fast Mobile Pay", color: "text-blue-600", acc: "0912345678" },
-                    { id: "cbe", name: "CBE Bank", sub: "Commercial Bank", color: "text-purple-700", acc: "1000123456789" },
-                    { id: "dashen", name: "Dashen Bank", sub: "Premier Banking", color: "text-blue-800", acc: "2000987654321" },
-                    { id: "berhan", name: "Berhan Bank", sub: "Clinical Ethics", color: "text-emerald-700", acc: "3000555666777" },
+                    { id: "telebirr", name: "Telebirr", sub: "Mobile Logic", color: "text-blue-500", acc: "0912345678" },
+                    { id: "cbe", name: "CBE Bank", sub: "Regional Reserve", color: "text-purple-600", acc: "100012345678" },
+                    { id: "dashen", name: "Dashen Bank", sub: "Commercial Auth", color: "text-blue-700", acc: "200098765432" },
+                    { id: "manual", name: "Manual Transfer", sub: "Direct Relay", color: "text-emerald-700", acc: "Institutional Portal" },
                   ].map((method) => (
                     <button
                       key={method.id}
                       type="button"
                       onClick={() => setPaymentMethod(method.id)}
-                      className={`p-6 rounded-3xl border-2 text-left transition-all relative overflow-hidden group ${paymentMethod === method.id
-                        ? 'border-emerald-600 bg-emerald-50/30'
-                        : 'border-gray-50 bg-gray-50/50 hover:bg-gray-100'
+                      className={`p-8 rounded-[2rem] border-2 text-left transition-all relative overflow-hidden group ${paymentMethod === method.id
+                        ? 'border-emerald-500 bg-emerald-50/20'
+                        : 'border-slate-50 bg-slate-50/50 hover:border-slate-100 hover:bg-slate-100/50'
                         }`}
                     >
                       {paymentMethod === method.id && (
-                        <div className="absolute top-4 right-4 text-emerald-600"><FaCheck className="text-sm" /></div>
+                        <div className="absolute top-6 right-6 text-emerald-600"><FaCheck /></div>
                       )}
-                      <p className={`text-lg font-black tracking-tighter ${method.color}`}>{method.name}</p>
-                      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{method.sub}</p>
+                      <p className={`text-xl font-black uppercase tracking-tighter ${method.color}`}>{method.name}</p>
+                      <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mt-1">{method.sub}</p>
+
                       {paymentMethod === method.id && (
-                        <div className="mt-4 pt-4 border-t border-emerald-100 animate-fade-in">
-                          <p className="text-[10px] font-black text-emerald-800 uppercase tracking-widest">Account Target:</p>
-                          <p className="text-sm font-black text-gray-900 mt-1">{method.acc}</p>
-                          <p className="text-[9px] font-bold text-gray-400 uppercase mt-1 tracking-tighter">YoniMediCare Pharmaceuticals</p>
+                        <div className="mt-6 pt-6 border-t border-emerald-100 animate-slide-in">
+                          <p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Protocol Address:</p>
+                          <p className="text-sm font-black text-slate-900 mt-1">{method.acc}</p>
                         </div>
                       )}
                     </button>
@@ -259,15 +334,18 @@ const Checkout = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Transaction ID / Reference (Optional)</label>
+                  <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Transaction Reference ID</label>
                   <input
                     type="text"
-                    placeholder="Enter the ID from your payment SMS/Receipt"
+                    placeholder="ENTER SMS/RECEIPT TRANSACTION ID..."
                     value={transactionId}
                     onChange={(e) => setTransactionId(e.target.value)}
-                    className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold placeholder:text-gray-300"
+                    className="w-full px-8 py-5 bg-slate-50 border border-transparent rounded-[1.5rem] focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 transition-all font-black text-xs uppercase tracking-widest text-slate-900 outline-none placeholder:text-slate-200"
                   />
-                  <p className="mt-3 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">Payment will be manually verified by the pharmacy root</p>
+                  <div className="mt-4 flex items-center space-x-2 text-[9px] font-black text-emerald-600 uppercase tracking-widest">
+                    <MdSecurity className="text-sm" />
+                    <span>Transaction will undergo root verification</span>
+                  </div>
                 </div>
               </div>
 
@@ -297,52 +375,49 @@ const Checkout = () => {
 
           {/* Sidebar Area */}
           <div className="lg:col-span-1">
-            <div className="sticky top-28 space-y-6">
-              <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-bl-[3rem] -z-10"></div>
-                <h3 className="text-lg font-black text-gray-900 mb-8 uppercase tracking-widest border-b border-gray-50 pb-4">Treatment List</h3>
+            <div className="sticky top-28 space-y-10">
+              <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-10 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[4rem] -z-10"></div>
+                <h3 className="text-xs font-black text-slate-400 mb-10 uppercase tracking-[0.4em] border-b border-slate-50 pb-6">Protocol List</h3>
 
-                <div className="space-y-6">
+                <div className="space-y-8">
                   {cartItems.map((item) => (
                     <div key={item.medicine._id} className="flex justify-between items-center group">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gray-100 rounded-xl overflow-hidden shadow-inner font-black text-xs flex items-center justify-center">
+                      <div className="flex items-center space-x-6">
+                        <div className="w-14 h-14 bg-slate-50 rounded-2xl overflow-hidden shadow-inner font-black text-xs flex items-center justify-center text-slate-900 border border-slate-100">
                           {item.quantity}×
                         </div>
                         <div>
-                          <p className="text-sm font-black text-gray-900 truncate max-w-[120px]">{item.medicine.name}</p>
-                          <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">{item.medicine.category}</p>
+                          <p className="text-sm font-black text-slate-900 truncate max-w-[140px] uppercase tracking-tight">{item.medicine.name}</p>
+                          <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mt-1">{item.medicine.category}</p>
                         </div>
                       </div>
-                      <span className="text-sm font-black text-gray-900">${(item.medicine.price * item.quantity).toFixed(2)}</span>
+                      <span className="text-sm font-black text-slate-900">{(item.medicine.price * item.quantity).toLocaleString()} <span className="text-[10px] text-slate-300">ETB</span></span>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-10 pt-8 border-t border-emerald-50 space-y-4">
-                  <div className="flex justify-between text-gray-400 font-bold text-[10px] uppercase tracking-widest">
-                    <span>Subtotal</span>
-                    <span className="text-gray-900 font-black">${getCartTotal().toFixed(2)}</span>
+                <div className="mt-12 pt-10 border-t border-slate-50 space-y-6">
+                  <div className="flex justify-between items-end">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol Subtotal</span>
+                    <span className="text-sm font-black text-slate-900">{getCartTotal().toLocaleString()} ETB</span>
                   </div>
-                  <div className="flex justify-between text-gray-400 font-bold text-[10px] uppercase tracking-widest">
-                    <span>Logistics</span>
-                    <span className="text-gray-900 font-black">${SHIPPING_COST.toFixed(2)}</span>
+                  <div className="flex justify-between items-end">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Distribution Fee</span>
+                    <span className="text-sm font-black text-slate-900">{SHIPPING_COST.toLocaleString()} ETB</span>
                   </div>
-                  <div className="flex justify-between text-2xl font-black text-emerald-600 pt-4 tracking-tighter">
-                    <span>TOTAL</span>
-                    <span>${total.toFixed(2)}</span>
+                  <div className="flex flex-col pt-6">
+                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-2">Final Settlement</span>
+                    <span className="text-4xl font-black text-slate-900 tracking-tighter">{total.toLocaleString()} <span className="text-lg text-slate-300">ETB</span></span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-emerald-900 rounded-[2rem] p-8 text-white relative overflow-hidden">
-                {/* Cyber decoration */}
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute top-4 left-4 w-full h-full border border-emerald-400 rounded-2xl"></div>
-                </div>
-                <MdSecurity className="text-4xl text-emerald-400 mb-4" />
-                <h4 className="text-sm font-black uppercase tracking-widest mb-2">Vault Protection</h4>
-                <p className="text-emerald-300 text-[10px] font-bold leading-relaxed uppercase tracking-wider">Your clinical and financial data is encrypted and managed by licensed pharmaceutical standards.</p>
+              <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-slate-900/40">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(16,185,129,0.2),transparent)]"></div>
+                <MdSecurity className="text-4xl text-emerald-500 mb-6 relative z-10" />
+                <h4 className="text-xs font-black uppercase tracking-[0.3em] mb-3 relative z-10 text-white">Vault Clearance</h4>
+                <p className="text-slate-400 text-[10px] font-medium leading-relaxed uppercase tracking-widest relative z-10">Institutional encryption protocols active. Secure distribution relay initiated.</p>
               </div>
             </div>
           </div>

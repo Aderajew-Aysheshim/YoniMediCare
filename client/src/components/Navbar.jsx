@@ -45,20 +45,24 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             to="/"
-            className={`flex items-center space-x-2 text-2xl font-black tracking-tighter hover:scale-105 transition-transform isolate ${!isScrolled && location.pathname === "/" ? "text-white" : "text-emerald-700"
+            className={`flex items-center space-x-3 text-2xl font-black tracking-tighter transition-all hover:scale-105 active:scale-95 group ${!isScrolled && location.pathname === "/" ? "text-white" : "text-slate-900"
               }`}
           >
-            <div className={`p-1.5 rounded-xl ${!isScrolled && location.pathname === "/" ? "bg-white/10" : "bg-emerald-100"
+            <div className={`p-2 rounded-2xl shadow-xl transition-all duration-500 group-hover:rotate-12 ${!isScrolled && location.pathname === "/" ? "bg-white/10 backdrop-blur-md border border-white/20" : "bg-emerald-600 text-white shadow-emerald-500/20"
               }`}>
-              <MdLocalPharmacy className="text-3xl" />
+              <MdLocalPharmacy className="text-2xl" />
             </div>
-            <span className="relative z-10">Yoni<span className={!isScrolled && location.pathname === "/" ? "text-emerald-300" : "text-emerald-500"}>MediCare</span></span>
+            <div className="flex flex-col leading-[0.8]">
+              <span className="text-2xl">YONI<span className={!isScrolled && location.pathname === "/" ? "text-emerald-400" : "text-emerald-600"}>MEDI</span></span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-50">Healthcare Hub</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <div className="flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-12">
+            <div className="flex items-center space-x-10">
               {navLinks.map((link) => {
+                const isActive = location.pathname === link.path;
                 if (link.protected && !user) return null;
                 if (link.adminOnly && (!user || user.role !== "admin")) return null;
 
@@ -66,50 +70,58 @@ const Navbar = () => {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`font-bold transition-all hover:text-emerald-400 ${!isScrolled && location.pathname === "/" ? "text-white/90" : "text-gray-700"
+                    className={`text-[10px] font-black uppercase tracking-[0.3em] transition-all relative py-2 ${!isScrolled && location.pathname === "/"
+                      ? isActive ? "text-white" : "text-white/60 hover:text-white"
+                      : isActive ? "text-emerald-600" : "text-slate-500 hover:text-slate-900"
                       }`}
                   >
                     {link.name}
+                    {isActive && (
+                      <div className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${!isScrolled && location.pathname === "/" ? "bg-white" : "bg-emerald-600"
+                        } animate-slide-in`}></div>
+                    )}
                   </Link>
                 );
               })}
             </div>
 
-            <div className="flex items-center space-x-4 border-l pl-8 border-gray-200">
+            <div className="flex items-center space-x-6 border-l pl-10 border-slate-200/20">
               {/* Cart */}
-              <Link to="/cart" className={`relative p-2 rounded-full transition-all group ${!isScrolled && location.pathname === "/" ? "bg-white/10 hover:bg-white/20" : "bg-gray-100 hover:bg-emerald-50"
+              <Link to="/cart" className={`relative p-3 rounded-2xl transition-all group overflow-hidden ${!isScrolled && location.pathname === "/" ? "bg-white/10 hover:bg-white/20 border border-white/10" : "bg-slate-50 hover:bg-emerald-50 border border-slate-100"
                 }`}>
-                <FaShoppingCart className={`text-xl ${!isScrolled && location.pathname === "/" ? "text-white" : "text-gray-700 group-hover:text-emerald-600"
+                <FaShoppingCart className={`text-lg ${!isScrolled && location.pathname === "/" ? "text-white" : "text-slate-600 group-hover:text-emerald-600"
                   }`} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center font-black">
+                  <span className="absolute -top-1 -right-1 bg-emerald-500 text-white text-[9px] rounded-lg h-5 w-5 flex items-center justify-center font-black shadow-lg">
                     {cartCount}
                   </span>
                 )}
               </Link>
 
               {/* Simplified User Menu */}
-              <div className="flex items-center space-x-4 ml-2">
+              <div className="flex items-center space-x-4">
                 {user ? (
                   <Link
                     to="/orders"
-                    className={`flex items-center justify-center w-10 h-10 rounded-full font-black text-lg transition-all ${!isScrolled && location.pathname === "/"
-                      ? "bg-white/20 text-white hover:bg-white/30"
-                      : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                    className={`flex items-center space-x-3 px-4 py-2 rounded-2xl transition-all border ${!isScrolled && location.pathname === "/"
+                      ? "bg-white/10 border-white/10 text-white hover:bg-white/20"
+                      : "bg-white border-slate-100 text-slate-900 shadow-sm hover:border-emerald-500/20 hover:shadow-emerald-500/5"
                       }`}
-                    title={user.name}
                   >
-                    @
+                    <div className="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-[10px] font-black text-white uppercase">
+                      {user.name.charAt(0)}
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest">{user.name.split(' ')[0]}</span>
                   </Link>
                 ) : (
                   <Link
                     to="/login"
-                    className={`font-black uppercase tracking-widest text-[10px] px-6 py-2.5 rounded-full transition-all border ${!isScrolled && location.pathname === "/"
-                      ? "bg-white text-emerald-900 border-white hover:bg-emerald-50"
-                      : "bg-emerald-700 text-white border-emerald-700 hover:bg-emerald-800"
+                    className={`text-[10px] font-black uppercase tracking-[0.3em] px-8 py-4 rounded-2xl transition-all shadow-2xl ${!isScrolled && location.pathname === "/"
+                      ? "bg-white text-slate-900 hover:bg-emerald-50 shadow-white/10"
+                      : "bg-slate-900 text-white hover:bg-emerald-600 shadow-slate-900/20"
                       }`}
                   >
-                    Authorize @
+                    Authorize @ Access
                   </Link>
                 )}
               </div>

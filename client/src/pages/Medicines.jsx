@@ -66,36 +66,44 @@ const Medicines = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Area */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">
-            Discover <span className="text-emerald-600">Health</span>
+    <div className="min-h-screen bg-[#f8fafc]">
+      {/* Institutional Header Area */}
+      <div className="bg-[#020617] pt-28 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_-20%,rgba(16,185,129,0.1),transparent)]"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 mb-6">
+            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Active Manifest v4.1</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter uppercase leading-none">
+            CLINICAL <span className="text-emerald-500">CATALOG</span>
           </h1>
-          <p className="text-gray-500 text-lg">Find the right treatment with our advanced search</p>
+          <p className="text-slate-400 text-lg max-w-2xl font-medium">Institutional resource monitoring and pharmaceutical distribution portal.</p>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 pb-20">
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Filters - Desktop */}
           <aside className="hidden lg:block w-72 flex-shrink-0">
-            <div className="sticky top-28 space-y-8 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+            <div className="sticky top-28 space-y-10 bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white shadow-2xl">
               <div className="flex justify-between items-center">
-                <h3 className="text-xl font-bold text-gray-900">Filters</h3>
-                <button onClick={clearFilters} className="text-xs font-bold text-emerald-600 hover:text-emerald-700">RESET</button>
+                <h3 className="text-xs font-black text-slate-900 tracking-[0.2em] uppercase">Parameters</h3>
+                <button onClick={clearFilters} className="text-[10px] font-black text-emerald-600 hover:text-emerald-700 tracking-widest uppercase underline">Reset</button>
               </div>
 
               {/* Category */}
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Category</label>
-                <div className="space-y-2">
+                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6">Classification</label>
+                <div className="space-y-1">
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => setFilters({ ...filters, category: cat === "All" ? "" : cat })}
-                      className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${(cat === "All" && !filters.category) || filters.category === cat
-                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
-                        : "text-gray-600 hover:bg-gray-50"
+                      className={`block w-full text-left px-5 py-3 rounded-2xl text-xs font-bold transition-all duration-300 ${(cat === "All" && !filters.category) || filters.category === cat
+                        ? "bg-slate-900 text-white shadow-xl translate-x-1"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                         }`}
                     >
                       {cat}
@@ -106,37 +114,41 @@ const Medicines = () => {
 
               {/* Price Range */}
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Price Range</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={filters.minPrice}
-                    onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 transition-all"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={filters.maxPrice}
-                    onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 transition-all"
-                  />
+                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6">Valuation (ETB)</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="relative">
+                    <input
+                      type="number"
+                      placeholder="MIN"
+                      value={filters.minPrice}
+                      onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-50 border-none rounded-xl text-[10px] font-black focus:ring-2 focus:ring-emerald-500 transition-all outline-none"
+                    />
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      placeholder="MAX"
+                      value={filters.maxPrice}
+                      onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-50 border-none rounded-xl text-[10px] font-black focus:ring-2 focus:ring-emerald-500 transition-all outline-none"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Sort By */}
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Sort By</label>
+                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6">Relay Priority</label>
                 <select
                   value={filters.sort}
                   onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl text-sm font-bold text-gray-700 focus:ring-2 focus:ring-emerald-500 appearance-none"
+                  className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer"
                 >
-                  <option value="-createdAt">Newest First</option>
-                  <option value="price">Price: Low to High</option>
-                  <option value="-price">Price: High to Low</option>
-                  <option value="name">Name: A to Z</option>
+                  <option value="-createdAt">NEWEST PROTOCOL</option>
+                  <option value="price">PRICE: LOWEST</option>
+                  <option value="-price">PRICE: HIGHEST</option>
+                  <option value="name">ALPHABETICAL</option>
                 </select>
               </div>
             </div>
@@ -145,38 +157,40 @@ const Medicines = () => {
           {/* Main Content */}
           <div className="flex-grow">
             {/* Search & Mobile Filter Toggle */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <div className="relative flex-grow group order-2 sm:order-1">
-                <FaSearch className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-600 transition-colors" />
+                <div className="absolute left-7 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-all duration-300">
+                  <FaSearch className="text-xl" />
+                </div>
                 <input
                   type="text"
-                  placeholder="Search manifest..."
+                  placeholder="SEARCH MANIFEST BY NAME OR PROTOCOL..."
                   value={filters.search}
                   onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                  className="w-full pl-16 pr-6 py-4 sm:py-5 bg-white border-2 border-transparent rounded-[2rem] sm:rounded-[2.5rem] shadow-sm focus:border-emerald-500 focus:shadow-xl transition-all text-base sm:text-lg font-medium outline-none"
+                  className="w-full pl-20 pr-8 py-5 sm:py-6 bg-white border border-slate-100 rounded-[2.5rem] shadow-xl shadow-slate-200/50 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 transition-all text-sm font-black uppercase tracking-widest outline-none placeholder:text-slate-300"
                 />
               </div>
               <button
                 onClick={() => setShowMobileFilters(true)}
-                className="lg:hidden p-4 sm:p-5 bg-white rounded-2xl sm:rounded-full shadow-sm text-emerald-600 order-1 sm:order-2 self-end sm:self-auto flex items-center space-x-2"
+                className="lg:hidden p-5 sm:p-6 bg-white rounded-3xl shadow-xl shadow-slate-200/50 text-emerald-600 order-1 sm:order-2 self-end sm:self-auto flex items-center space-x-3 border border-slate-100"
               >
                 <MdOutlineFilterList className="text-2xl" />
-                <span className="sm:hidden font-black uppercase tracking-widest text-[10px]">Adjust Filters</span>
+                <span className="sm:hidden font-black uppercase tracking-widest text-[10px]">Filter Manifest</span>
               </button>
             </div>
 
             {/* Active Filters Display */}
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div className="flex flex-wrap gap-3 mb-8">
               {filters.category && (
-                <span className="inline-flex items-center px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold">
+                <span className="inline-flex items-center px-5 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
                   {filters.category}
-                  <button onClick={() => setFilters({ ...filters, category: "" })} className="ml-2"><FaTimes /></button>
+                  <button onClick={() => setFilters({ ...filters, category: "" })} className="ml-3 hover:text-emerald-400"><FaTimes /></button>
                 </span>
               )}
               {(filters.minPrice || filters.maxPrice) && (
-                <span className="inline-flex items-center px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold">
-                  ${filters.minPrice || 0} - ${filters.maxPrice || '∞'}
-                  <button onClick={() => setFilters({ ...filters, minPrice: "", maxPrice: "" })} className="ml-2"><FaTimes /></button>
+                <span className="inline-flex items-center px-5 py-2 bg-emerald-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                  {filters.minPrice || 0} - {filters.maxPrice || '∞'} ETB
+                  <button onClick={() => setFilters({ ...filters, minPrice: "", maxPrice: "" })} className="ml-3 hover:text-slate-900"><FaTimes /></button>
                 </span>
               )}
             </div>
@@ -199,9 +213,12 @@ const Medicines = () => {
               </div>
             ) : (
               <>
-                <div className="mb-6 flex justify-between items-center px-2 text-sm font-bold text-gray-400 uppercase tracking-widest">
-                  <span>Found {medicines.length} items</span>
-                  <span className="hidden md:block">Grid View</span>
+                <div className="mb-8 flex justify-between items-center px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                  <span className="flex items-center">
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></span>
+                    Relaying {medicines.length} Protocols
+                  </span>
+                  <span className="hidden md:block">Active Grid Manifest</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                   {medicines.map((medicine) => (

@@ -73,11 +73,17 @@ const Register = () => {
         <div className="relative z-10 w-full p-16 flex flex-col justify-between">
           <div>
             <div className="flex items-center space-x-3 text-white mb-12">
-              <MdLocalPharmacy className="text-3xl text-emerald-400" />
-              <span className="text-xl font-black tracking-tighter uppercase">YoniMediCare</span>
+              <div className="p-2 bg-emerald-500 rounded-xl">
+                <MdLocalPharmacy className="text-3xl text-white" />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-xl font-black tracking-tighter uppercase">Yoni<span className="text-emerald-400">Medi</span></span>
+                <span className="text-[7px] font-black uppercase tracking-[0.4em] text-emerald-500/60 text-center">Healthcare Hub</span>
+              </div>
             </div>
-            <h2 className="text-5xl font-black text-white leading-tight tracking-tighter mb-6">
-              Join the <span className="text-emerald-400">Future</span> of Pharmacy.
+            <h2 className="text-5xl font-black text-white leading-tight tracking-tighter mb-6 uppercase">
+              JOIN THE <br />
+              <span className="text-emerald-400">PROTOCOL.</span>
             </h2>
             <p className="text-emerald-100/50 font-medium text-lg max-w-xs">
               Start your journey with Ethiopia's most premium medical delivery platform. Professional, Secure, Precise.
@@ -186,13 +192,13 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-10 py-5 rounded-[2rem] bg-emerald-600 text-white font-black uppercase tracking-widest text-xs shadow-xl shadow-emerald-500/20 hover:bg-emerald-500 hover:shadow-emerald-500/40 active:scale-[0.98] transition-all flex items-center justify-center space-x-3 disabled:opacity-70 disabled:cursor-not-allowed group"
+                className="w-full mt-10 py-6 rounded-[2.5rem] bg-emerald-600 text-white font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-emerald-500/20 hover:bg-emerald-500 hover:shadow-emerald-500/40 active:scale-[0.98] transition-all flex items-center justify-center space-x-4 disabled:opacity-70 disabled:cursor-not-allowed group"
               >
                 {loading ? (
                   <div className="w-6 h-6 border-2 border-white/20 border-b-white rounded-full animate-spin"></div>
                 ) : (
                   <>
-                    <span>Initialize User Profile</span>
+                    <span>INITIALIZE CLINICAL PROFILE</span>
                     <MdArrowForward className="text-xl group-hover:translate-x-1 transition-transform" />
                   </>
                 )}

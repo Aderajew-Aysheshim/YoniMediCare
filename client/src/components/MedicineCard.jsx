@@ -12,7 +12,7 @@ const MedicineCard = ({ medicine }) => {
   };
 
   return (
-    <div className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+    <div className="group bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-700 transform hover:-translate-y-3">
       <Link to={`/medicines/${medicine._id}`} className="block relative">
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-50">
           <img
@@ -58,31 +58,31 @@ const MedicineCard = ({ medicine }) => {
             </span>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900 mb-2 truncate group-hover:text-emerald-600 transition-colors">
+          <h3 className="text-xl font-black text-slate-900 mb-2 truncate group-hover:text-emerald-600 transition-colors tracking-tight uppercase">
             {medicine.name}
           </h3>
 
-          <p className="text-sm text-gray-500 mb-6 line-clamp-2 min-h-[40px]">
+          <p className="text-sm text-slate-500 mb-8 line-clamp-2 min-h-[40px] font-medium leading-relaxed">
             {medicine.description}
           </p>
 
           <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Price</span>
-              <span className="text-2xl font-black text-gray-900">
-                ${medicine.price.toFixed(2)}
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Valuation</span>
+              <span className="text-2xl font-black text-slate-900">
+                {medicine.price.toLocaleString()} <span className="text-xs text-slate-400">ETB</span>
               </span>
             </div>
 
             <button
               onClick={handleAddToCart}
               disabled={medicine.stock === 0}
-              className={`p-4 rounded-2xl transition-all duration-300 ${medicine.stock === 0
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-emerald-600 text-white shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:scale-110 active:scale-95"
+              className={`p-5 rounded-2xl transition-all duration-500 ${medicine.stock === 0
+                ? "bg-slate-100 text-slate-300 cursor-not-allowed"
+                : "bg-slate-900 text-white shadow-xl hover:bg-emerald-600 hover:scale-110 active:scale-95 group/btn"
                 }`}
             >
-              <MdAddShoppingCart className="text-2xl" />
+              <MdAddShoppingCart className="text-2xl group-hover/btn:rotate-12 transition-transform" />
             </button>
           </div>
         </div>

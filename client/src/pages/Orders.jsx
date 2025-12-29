@@ -41,12 +41,33 @@ const Orders = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#fcfcfd] py-20">
-      <div className="max-w-5xl mx-auto px-6">
-        <header className="mb-16 text-center">
-          <h1 className="text-5xl font-black text-gray-900 tracking-tighter uppercase mb-2">My Manifests</h1>
-          <p className="text-gray-400 font-bold uppercase tracking-[0.3em] text-[10px]">Track your pharmaceutical journey</p>
-        </header>
+    <div className="min-h-screen bg-[#f8fafc] pb-32">
+      {/* Institutional Manifest Header */}
+      <div className="bg-[#020617] pt-32 pb-24 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse delay-700"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#020617_70%)] opacity-60"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="flex flex-col items-center text-center">
+            <div className="flex items-center space-x-3 mb-6 animate-fade-in">
+              <span className="h-px w-8 bg-emerald-500/50"></span>
+              <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.5em]">Patient Resource Manifest</p>
+              <span className="h-px w-8 bg-emerald-500/50"></span>
+            </div>
+            <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase mb-6 leading-none">
+              HISTORICAL <span className="text-emerald-500">RELAYS</span>
+            </h1>
+            <p className="max-w-xl text-slate-400 font-bold uppercase tracking-widest text-xs leading-relaxed">
+              Active tracking and historical archives of all clinical transfers and pharmaceutical deployments.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 -mt-16 relative z-20">
 
         {orders.length === 0 ? (
           <div className="bg-white rounded-[3rem] shadow-sm border border-gray-100 p-20 text-center animate-fade-in">
@@ -74,15 +95,15 @@ const Orders = () => {
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                       <div>
                         <div className="flex items-center space-x-3 mb-2">
-                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Order Reference</span>
-                          <span className="bg-gray-900 text-white px-3 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase">#{order._id.slice(-8).toUpperCase()}</span>
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol Reference</span>
+                          <span className="bg-slate-900 text-white px-3 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase shadow-xl shadow-slate-900/20">#{order._id.slice(-8).toUpperCase()}</span>
                         </div>
-                        <p className="text-gray-400 font-bold text-xs">Placed on {new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                        <p className="text-slate-400 font-bold text-xs uppercase tracking-wider">Manifest Initiated: {new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                       </div>
                       <div className="flex items-center space-x-4">
-                        <div className={`flex items-center space-x-3 px-6 py-3 rounded-2xl border font-black text-[10px] uppercase tracking-widest ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                          order.status === 'cancelled' ? 'bg-rose-50 text-rose-600 border-rose-100' :
-                            'bg-gray-50 text-gray-900 border-gray-100'
+                        <div className={`flex items-center space-x-3 px-6 py-3 rounded-2xl border font-black text-[10px] uppercase tracking-widest transition-all duration-500 ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-lg shadow-emerald-500/5' :
+                          order.status === 'cancelled' ? 'bg-rose-50 text-rose-600 border-rose-100 shadow-lg shadow-rose-500/5' :
+                            'bg-slate-50 text-slate-900 border-slate-100 shadow-lg shadow-slate-500/5'
                           }`}>
                           <currentStatus.icon className="text-sm" />
                           <span>{currentStatus.label}</span>
@@ -120,60 +141,70 @@ const Orders = () => {
 
                     {/* Items List */}
                     <div className="space-y-6 mb-12">
-                      <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Treatment Breakdown</h4>
+                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Clinical Regimen Breakdown</h4>
                       {order.items.map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-6 bg-gray-50/50 rounded-3xl border border-gray-100 group-hover:bg-white group-hover:shadow-sm transition-all duration-500">
-                          <div className="flex items-center space-x-6">
-                            <div className="w-16 h-16 bg-white rounded-2xl shadow-inner border border-gray-100 overflow-hidden">
-                              <img src={item.medicine.image || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=100"} alt={item.medicine.name} className="w-full h-full object-cover" />
+                        <div key={idx} className="flex items-center justify-between p-8 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 group-hover:bg-white group-hover:shadow-xl group-hover:shadow-slate-200/40 transition-all duration-700">
+                          <div className="flex items-center space-x-8">
+                            <div className="w-20 h-20 bg-white rounded-3xl shadow-inner border border-slate-100 overflow-hidden p-4">
+                              <img src={item.medicine.image || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=100"} alt={item.medicine.name} className="w-full h-full object-contain" />
                             </div>
                             <div>
-                              <p className="font-black text-gray-900 uppercase text-sm tracking-tight">{item.medicine.name}</p>
-                              <p className="text-[10px] font-black text-emerald-600 tracking-widest uppercase mt-0.5">{item.medicine.category}</p>
-                              <p className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Qty: {item.quantity}</p>
+                              <p className="font-black text-slate-900 uppercase text-lg tracking-tighter">{item.medicine.name}</p>
+                              <div className="flex items-center space-x-4 mt-1">
+                                <span className="text-[9px] font-black text-emerald-600 tracking-widest uppercase bg-emerald-50 px-2 py-0.5 rounded-md">{item.medicine.category}</span>
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Qty: {item.quantity} units</span>
+                              </div>
                             </div>
                           </div>
-                          <div className="text-right font-black text-gray-900 tracking-tighter text-lg">
-                            ${(item.price * item.quantity).toFixed(2)}
+                          <div className="text-right">
+                            <p className="font-black text-slate-900 tracking-tighter text-2xl">{(item.price * item.quantity).toLocaleString()}</p>
+                            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">ETB</span>
                           </div>
                         </div>
                       ))}
                     </div>
 
                     {/* Footer Info */}
-                    <div className="border-t border-gray-100 pt-10 flex flex-col md:flex-row justify-between gap-10">
+                    <div className="border-t border-slate-100 pt-12 flex flex-col md:flex-row justify-between gap-12">
                       <div className="flex-1 md:max-w-xs">
-                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Logistics Target</h4>
-                        <p className="text-gray-900 font-black text-sm leading-relaxed">
+                        <div className="flex items-center space-x-3 mb-4">
+                          <span className="h-0.5 w-4 bg-emerald-500"></span>
+                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Relay Target</h4>
+                        </div>
+                        <p className="text-slate-900 font-black text-sm leading-relaxed uppercase tracking-tight">
                           {order.deliveryAddress.street}<br />
                           {order.deliveryAddress.city}, {order.deliveryAddress.state} {order.deliveryAddress.zipCode}
                         </p>
+                        <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Direct Dispatch Protocol Active</p>
                       </div>
 
                       {order.prescriptionImage && (
-                        <div className="flex-1 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 p-6 rounded-[2rem] border border-emerald-500/10 flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-emerald-600">
-                              <FaFilePrescription className="text-xl" />
+                        <div className="flex-1 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex items-center justify-between group/rx">
+                          <div className="flex items-center space-x-5">
+                            <div className="w-14 h-14 bg-emerald-500 rounded-2xl shadow-lg shadow-emerald-500/20 flex items-center justify-center text-white transition-transform group-hover/rx:rotate-6">
+                              <FaFilePrescription className="text-2xl" />
                             </div>
                             <div>
-                              <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Medical Validation</p>
-                              <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">Authorized PDF</p>
+                              <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Medical Validation</p>
+                              <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Institutional Auth PDF</p>
                             </div>
                           </div>
-                          <a href={order.prescriptionImage} target="_blank" rel="noreferrer" className="p-3 bg-white text-gray-900 rounded-xl shadow-sm hover:shadow-md transition-all">
+                          <a href={order.prescriptionImage} target="_blank" rel="noreferrer" className="w-12 h-12 flex items-center justify-center bg-slate-900 text-white rounded-xl shadow-xl hover:bg-emerald-600 transition-all">
                             <MdLaunch className="text-xl" />
                           </a>
                         </div>
                       )}
 
                       <div className="text-right flex flex-col justify-end">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Settlement</p>
-                        <p className="text-4xl font-black text-gray-900 tracking-tighter leading-none mb-6">${order.totalAmount.toFixed(2)}</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Liability Settlement</p>
+                        <div className="flex items-end justify-end space-x-3 mb-8">
+                          <span className="text-5xl font-black text-slate-900 tracking-tighter leading-none">{order.totalAmount.toLocaleString()}</span>
+                          <span className="text-xs font-black text-slate-300 uppercase tracking-widest mb-1">ETB</span>
+                        </div>
 
-                        <Link to="/medicines" className="inline-flex items-center justify-center space-x-3 bg-gray-900 text-white px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all">
-                          <FaRedo />
-                          <span>REORDER REGIMEN</span>
+                        <Link to="/medicines" className="group/btn inline-flex items-center justify-center space-x-4 bg-slate-900 text-white px-10 py-5 rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-slate-900/20">
+                          <FaRedo className="group-hover/btn:rotate-180 transition-transform duration-700" />
+                          <span>REINITIATE REGIMEN</span>
                         </Link>
                       </div>
                     </div>
