@@ -70,25 +70,25 @@ const Medicines = () => {
       {/* Institutional Header Area */}
       <div className="bg-[#020617] pt-28 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_-20%,rgba(16,185,129,0.1),transparent)]"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 mb-6">
+        <div className="relative z-10 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="inline-flex items-center px-3 py-1 mb-6 space-x-2 border rounded-full bg-emerald-500/10 border-emerald-500/20">
             <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
             <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Active Manifest v4.1</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter uppercase leading-none">
+          <h1 className="mb-4 text-4xl font-black leading-none tracking-tighter text-white uppercase md:text-6xl">
             PHARMACY <span className="text-emerald-500">CATALOG</span>
           </h1>
-          <p className="text-slate-400 text-lg max-w-2xl font-medium">Institutional resource monitoring and pharmaceutical distribution portal.</p>
+          <p className="max-w-2xl text-lg font-medium text-slate-400">Institutional resource monitoring and pharmaceutical distribution portal.</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 pb-20">
+      <div className="relative z-20 px-4 pb-20 mx-auto -mt-10 max-w-7xl sm:px-6 lg:px-8">
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row">
           {/* Sidebar Filters - Desktop */}
-          <aside className="hidden lg:block w-72 flex-shrink-0">
+          <aside className="flex-shrink-0 hidden lg:block w-72">
             <div className="sticky top-28 space-y-10 bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white shadow-2xl">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <h3 className="text-xs font-black text-slate-900 tracking-[0.2em] uppercase">Parameters</h3>
                 <button onClick={clearFilters} className="text-[10px] font-black text-emerald-600 hover:text-emerald-700 tracking-widest uppercase underline">Reset</button>
               </div>
@@ -143,7 +143,7 @@ const Medicines = () => {
                 <select
                   value={filters.sort}
                   onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
-                  className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer"
+                  className="w-full px-5 py-3 text-xs font-bold border-none appearance-none cursor-pointer bg-slate-50 rounded-2xl text-slate-900 focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="-createdAt">NEWEST PROTOCOL</option>
                   <option value="price">PRICE: LOWEST</option>
@@ -157,9 +157,9 @@ const Medicines = () => {
           {/* Main Content */}
           <div className="flex-grow">
             {/* Search & Mobile Filter Toggle */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <div className="relative flex-grow group order-2 sm:order-1">
-                <div className="absolute left-7 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-all duration-300">
+            <div className="flex flex-col gap-4 mb-12 sm:flex-row">
+              <div className="relative flex-grow order-2 group sm:order-1">
+                <div className="absolute transition-all duration-300 transform -translate-y-1/2 left-7 top-1/2 text-slate-400 group-focus-within:text-emerald-500">
                   <FaSearch className="text-xl" />
                 </div>
                 <input
@@ -172,7 +172,7 @@ const Medicines = () => {
               </div>
               <button
                 onClick={() => setShowMobileFilters(true)}
-                className="lg:hidden p-5 sm:p-6 bg-white rounded-3xl shadow-xl shadow-slate-200/50 text-emerald-600 order-1 sm:order-2 self-end sm:self-auto flex items-center space-x-3 border border-slate-100"
+                className="flex items-center self-end order-1 p-5 space-x-3 bg-white border shadow-xl lg:hidden sm:p-6 rounded-3xl shadow-slate-200/50 text-emerald-600 sm:order-2 sm:self-auto border-slate-100"
               >
                 <MdOutlineFilterList className="text-2xl" />
                 <span className="sm:hidden font-black uppercase tracking-widest text-[10px]">Filter Manifest</span>
@@ -197,30 +197,30 @@ const Medicines = () => {
 
             {/* Grid */}
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white p-4 h-96 rounded-3xl animate-pulse shadow-sm border border-gray-100"></div>
+                  <div key={i} className="p-4 bg-white border border-gray-100 shadow-sm h-96 rounded-3xl animate-pulse"></div>
                 ))}
               </div>
             ) : medicines.length === 0 ? (
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-20 text-center">
+              <div className="p-20 text-center bg-white border border-gray-100 shadow-sm rounded-3xl">
                 <div className="max-w-xs mx-auto">
                   <img src="https://illustrations.popsy.co/emerald/box.svg" alt="Empty" className="mb-8" />
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">PHARMACY CATALOG</h1>
-                  <p className="text-gray-500 mb-8">We couldn't find any medicines matching your filters. Try search something else.</p>
-                  <button onClick={clearFilters} className="btn-primary w-full shadow-none">Clear all filters</button>
+                  <h1 className="mb-2 text-3xl font-bold text-gray-900">PHARMACY CATALOG</h1>
+                  <p className="mb-8 text-gray-500">We couldn't find any medicines matching your filters. Try search something else.</p>
+                  <button onClick={clearFilters} className="w-full shadow-none btn-primary">Clear all filters</button>
                 </div>
               </div>
             ) : (
               <>
                 <div className="mb-8 flex justify-between items-center px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
                   <span className="flex items-center">
-                    <span className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></span>
+                    <span className="w-2 h-2 mr-3 rounded-full bg-emerald-500"></span>
                     Relaying {medicines.length} Protocols
                   </span>
                   <span className="hidden md:block">Active Grid Manifest</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
                   {medicines.map((medicine) => (
                     <MedicineCard key={medicine._id} medicine={medicine} />
                   ))}
@@ -235,9 +235,9 @@ const Medicines = () => {
       {showMobileFilters && (
         <div className="fixed inset-0 z-[60] lg:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowMobileFilters(false)}></div>
-          <div className="absolute inset-y-0 right-0 w-80 bg-white shadow-2xl animate-fade-in shadow-black/20 overflow-y-auto">
+          <div className="absolute inset-y-0 right-0 overflow-y-auto bg-white shadow-2xl w-80 animate-fade-in shadow-black/20">
             <div className="p-8">
-              <div className="flex justify-between items-center mb-8">
+              <div className="flex items-center justify-between mb-8">
                 <h3 className="text-2xl font-black text-gray-900">Filters</h3>
                 <button onClick={() => setShowMobileFilters(false)} className="p-2 bg-gray-100 rounded-xl"><FaTimes /></button>
               </div>
@@ -246,7 +246,7 @@ const Medicines = () => {
               <div className="space-y-10">
                 {/* Sort */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Sort By</label>
+                  <label className="block mb-4 text-xs font-black tracking-widest text-gray-400 uppercase">Sort By</label>
                   <div className="grid grid-cols-2 gap-2">
                     {["-createdAt", "price", "-price", "name"].map((s) => (
                       <button
@@ -262,7 +262,7 @@ const Medicines = () => {
 
                 {/* Category */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Categories</label>
+                  <label className="block mb-4 text-xs font-black tracking-widest text-gray-400 uppercase">Categories</label>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((cat) => (
                       <button
@@ -281,21 +281,21 @@ const Medicines = () => {
 
                 {/* Price */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Price Range</label>
+                  <label className="block mb-4 text-xs font-black tracking-widest text-gray-400 uppercase">Price Range</label>
                   <div className="grid grid-cols-2 gap-4">
                     <input
                       type="number"
                       placeholder="Min"
                       value={filters.minPrice}
                       onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
-                      className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm"
+                      className="w-full px-4 py-3 text-sm border-none bg-gray-50 rounded-xl"
                     />
                     <input
                       type="number"
                       placeholder="Max"
                       value={filters.maxPrice}
                       onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
-                      className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm"
+                      className="w-full px-4 py-3 text-sm border-none bg-gray-50 rounded-xl"
                     />
                   </div>
                 </div>
@@ -303,11 +303,11 @@ const Medicines = () => {
                 <div className="pt-8">
                   <button
                     onClick={() => setShowMobileFilters(false)}
-                    className="btn-primary w-full py-5 rounded-2xl"
+                    className="w-full py-5 btn-primary rounded-2xl"
                   >
                     Show {medicines.length} Results
                   </button>
-                  <button onClick={clearFilters} className="w-full mt-4 text-sm font-bold text-gray-400 underline uppercase tracking-widest">Clear All</button>
+                  <button onClick={clearFilters} className="w-full mt-4 text-sm font-bold tracking-widest text-gray-400 underline uppercase">Clear All</button>
                 </div>
               </div>
             </div>
