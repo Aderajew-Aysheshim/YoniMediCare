@@ -290,6 +290,15 @@ const AdminDashboardEnhanced = () => {
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
 
+              <button
+                onClick={handleLogout}
+                className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors flex items-center space-x-2"
+                title="Logout"
+              >
+                <FaSignOutAlt className="text-white text-xl" />
+                <span className="text-white text-sm font-medium hidden md:block">Logout</span>
+              </button>
+
               <div className="relative profile-dropdown">
                 <button
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
