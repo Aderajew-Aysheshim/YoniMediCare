@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -19,9 +19,10 @@ import {
 import { Link } from "react-router-dom";
 
 const AdminDashboardEnhanced = () => {
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [medicines, setMedicines] = useState([]);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
@@ -50,6 +51,17 @@ const AdminDashboardEnhanced = () => {
   useEffect(() => {
     fetchInitialData();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showProfileDropdown && !event.target.closest('.profile-dropdown')) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showProfileDropdown]);
 
   const fetchInitialData = async () => {
     setLoading(true);
@@ -273,16 +285,82 @@ const AdminDashboardEnhanced = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
+              <button className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors relative">
                 <FaBell className="text-white text-xl" />
+                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
-              <button
-                onClick={handleLogout}
-                className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors flex items-center space-x-2"
-              >
-                <FaSignOutAlt className="text-white text-xl" />
-                <span className="text-white text-sm font-medium">Logout</span>
-              </button>
+
+              <div className="relative profile-dropdown">
+                <button
+                  onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                  className="flex items-center space-x-3 p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors"
+                >
+                  <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center">
+                    <FaUserCircle className="text-white text-lg" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-white text-sm font-medium">{user?.name || 'Admin User'}</p>
+                    <p className="text-emerald-200 text-xs">Administrator</p>
+                  </div>
+                  <FaChevronDown className={`text-white text-sm transition-transform ${showProfileDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                {showProfileDropdown && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+                    <div className="p-4 border-b border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center">
+                          <FaUserCircle className="text-white text-xl" />
+                        </div>
+                        <div>
+                          <p className="font-black text-gray-900">{user?.name || 'Admin User'}</p>
+                          <p className="text-sm text-gray-500">{user?.email || 'admin@yonimedicare.com'}</p>
+                          <span className="inline-block px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full mt-1">
+                            Administrator
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="py-2">
+                      <Link
+                        to="/profile"
+                        className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <FaUserCircle className="text-gray-400" />
+                        <span className="text-sm font-medium">Profile Settings</span>
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <FaCog className="text-gray-400" />
+                        <span className="text-sm font-medium">System Settings</span>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setShowProfileDropdown(false);
+                          // Add analytics or reports functionality
+                        }}
+                        className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors w-full text-left"
+                      >
+                        <FaChartBar className="text-gray-400" />
+                        <span className="text-sm font-medium">Analytics & Reports</span>
+                      </button>
+                    </div>
+
+                    <div className="border-t border-gray-100 p-2">
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors w-full"
+                      >
+                        <FaSignOutAlt className="text-red-500" />
+                        <span className="text-sm font-medium">Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -7,7 +7,8 @@ import {
   MdEmail,
   MdSecurity,
   MdVisibility,
-  MdVisibilityOff
+  MdVisibilityOff,
+  MdDashboard
 } from 'react-icons/md';
 import logo from '../assets/logo.svg';
 
@@ -53,6 +54,29 @@ const Login = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleQuickAdminLogin = async () => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const result = await login('admin@yonimedicare.com', 'admin123');
+
+      if (result?.requires2FA) {
+        setShow2FA(true);
+        setEmailSent('admin@yonimedicare.com');
+        setFormData(prev => ({ ...prev, password: '' }));
+      } else {
+        navigate('/admin', { replace: true });
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Admin login failed. Please try again.';
+      setError(errorMessage);
+      setTimeout(() => setError(''), 5000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogin = async (e) => {
@@ -154,6 +178,20 @@ const Login = () => {
               >
                 Admin
               </button>
+            </div>
+
+            {/* Quick Admin Login Button */}
+            <div className="mb-6">
+              <button
+                onClick={handleQuickAdminLogin}
+                disabled={loading}
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-xl font-black uppercase tracking-wider text-sm hover:from-gray-800 hover:to-gray-700 transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              >
+                <MdDashboard className="text-lg" />
+                <span>Quick Admin Login</span>
+                <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Instant Access</span>
+              </button>
+              <p className="text-center text-xs text-gray-500 mt-2">Login immediately as system administrator</p>
             </div>
 
             <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-200">
