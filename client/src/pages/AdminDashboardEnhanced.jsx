@@ -306,6 +306,16 @@ const AdminDashboardEnhanced = () => {
                 </button>
               </div>
 
+              {/* Order Now Button */}
+              <button
+                onClick={() => navigate('/medicines')}
+                className="hidden md:flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
+                title="Order Medicines"
+              >
+                <FaShoppingCart className="text-sm" />
+                <span>Order Now</span>
+              </button>
+
               <button className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors relative">
                 <FaBell className="text-white text-xl" />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>

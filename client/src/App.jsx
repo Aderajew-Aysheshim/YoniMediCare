@@ -14,6 +14,10 @@ import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboardEnhanced";
 import PharmacyDashboard from "./pages/PharmacyDashboard";
+import AboutUs from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";
+import HowItWorks from "./pages/HowItWorks";
+import OrderNow from "./pages/OrderNow";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -31,6 +35,10 @@ function App() {
                 <Route path="/medicines" element={<Medicines />} />
                 <Route path="/medicines/:id" element={<MedicineDetail />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
+                <Route path="/order-now" element={<OrderNow />} />
                 <Route
                   path="/checkout"
                   element={
