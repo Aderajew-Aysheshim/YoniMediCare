@@ -75,6 +75,365 @@
 
 body {
   margin: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Responsive Design Improvements */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px; /* Smaller base font for mobile */
+  }
+  
+  body {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  html {
+    font-size: 15px; /* Medium font for tablets */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  html {
+    font-size: 16px; /* Standard font for small desktops */
+  }
+}
+
+/* Mobile-first responsive utilities */
+.responsive-text-xs {
+  @apply text-xs;
+}
+
+.responsive-text-sm {
+  @apply text-sm;
+}
+
+.responsive-text-base {
+  @apply text-base;
+}
+
+.responsive-text-lg {
+  @apply text-lg;
+}
+
+.responsive-text-xl {
+  @apply text-xl;
+}
+
+.responsive-text-2xl {
+  @apply text-2xl;
+}
+
+.responsive-text-3xl {
+  @apply text-3xl;
+}
+
+.responsive-text-4xl {
+  @apply text-4xl;
+}
+
+.responsive-text-5xl {
+  @apply text-5xl;
+}
+
+/* Responsive text classes */
+@media (max-width: 640px) {
+  .responsive-text {
+    @apply text-sm;
+  }
+  
+  .responsive-title {
+    @apply text-2xl;
+  }
+  
+  .responsive-subtitle {
+    @apply text-lg;
+  }
+  
+  .responsive-description {
+    @apply text-base;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .responsive-text {
+    @apply text-base;
+  }
+  
+  .responsive-title {
+    @apply text-3xl;
+  }
+  
+  .responsive-subtitle {
+    @apply text-xl;
+  }
+  
+  .responsive-description {
+    @apply text-lg;
+  }
+}
+
+@media (min-width: 769px) {
+  .responsive-text {
+    @apply text-base;
+  }
+  
+  .responsive-title {
+    @apply text-4xl;
+  }
+  
+  .responsive-subtitle {
+    @apply text-2xl;
+  }
+  
+  .responsive-description {
+    @apply text-xl;
+  }
+}
+
+/* Responsive spacing */
+.responsive-p-2 {
+  @apply p-2 sm:p-4 md:p-6 lg:p-8;
+}
+
+.responsive-p-4 {
+  @apply p-4 sm:p-6 md:p-8 lg:p-12;
+}
+
+.responsive-p-6 {
+  @apply p-6 sm:p-8 md:p-12 lg:p-16;
+}
+
+.responsive-p-8 {
+  @apply p-8 sm:p-12 md:p-16 lg:p-20;
+}
+
+.responsive-m-2 {
+  @apply m-2 sm:m-4 md:m-6 lg:m-8;
+}
+
+.responsive-m-4 {
+  @apply m-4 sm:m-6 md:m-8 lg:m-12;
+}
+
+.responsive-m-6 {
+  @apply m-6 sm:m-8 md:m-12 lg:m-16;
+}
+
+.responsive-m-8 {
+  @apply m-8 sm:m-12 md:m-16 lg:m-20;
+}
+
+/* Responsive grid */
+.responsive-grid-1 {
+  @apply grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1;
+}
+
+.responsive-grid-2 {
+  @apply grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2;
+}
+
+.responsive-grid-3 {
+  @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3;
+}
+
+.responsive-grid-4 {
+  @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4;
+}
+
+.responsive-grid-auto {
+  @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
+}
+
+/* Responsive containers */
+.responsive-container {
+  @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
+}
+
+.responsive-container-sm {
+  @apply px-4 sm:px-6 md:px-8 lg:px-12;
+}
+
+.responsive-container-lg {
+  @apply px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20;
+}
+
+/* Responsive buttons */
+.responsive-btn {
+  @apply px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 text-xs sm:text-sm md:text-base;
+}
+
+.responsive-btn-lg {
+  @apply px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 text-sm sm:text-base md:text-lg;
+}
+
+/* Responsive images */
+.responsive-img {
+  @apply w-full h-auto object-cover;
+}
+
+.responsive-img-fixed {
+  @apply w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover;
+}
+
+/* Responsive cards */
+.responsive-card {
+  @apply p-4 sm:p-6 md:p-8;
+}
+
+.responsive-card-sm {
+  @apply p-3 sm:p-4 md:p-6;
+}
+
+.responsive-card-lg {
+  @apply p-6 sm:p-8 md:p-10 lg:p-12;
+}
+
+/* Mobile navigation improvements */
+@media (max-width: 768px) {
+  .mobile-menu-hidden {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .mobile-menu-visible {
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .mobile-overlay-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+  .responsive-table {
+    @apply block overflow-x-auto;
+  }
+  
+  .responsive-table table {
+    @apply min-w-full;
+  }
+  
+  .responsive-table th,
+  .responsive-table td {
+    @apply px-2 py-3 text-xs;
+  }
+}
+
+/* Responsive forms */
+@media (max-width: 640px) {
+  .responsive-form {
+    @apply space-y-4;
+  }
+  
+  .responsive-form input,
+  .responsive-form select,
+  .responsive-form textarea {
+    @apply text-base;
+  }
+  
+  .responsive-form button {
+    @apply w-full py-3;
+  }
+}
+
+/* Responsive hero sections */
+@media (max-width: 640px) {
+  .responsive-hero {
+    @apply py-12 px-4;
+  }
+  
+  .responsive-hero h1 {
+    @apply text-3xl;
+  }
+  
+  .responsive-hero p {
+    @apply text-base;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .responsive-hero {
+    @apply py-16 px-6;
+  }
+  
+  .responsive-hero h1 {
+    @apply text-4xl;
+  }
+  
+  .responsive-hero p {
+    @apply text-lg;
+  }
+}
+
+@media (min-width: 769px) {
+  .responsive-hero {
+    @apply py-20 px-8;
+  }
+  
+  .responsive-hero h1 {
+    @apply text-5xl;
+  }
+  
+  .responsive-hero p {
+    @apply text-xl;
+  }
+}
+
+/* Touch-friendly targets for mobile */
+@media (max-width: 768px) {
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .touch-target-lg {
+    @apply min-h-[48px] min-w-[48px];
+  }
+}
+
+/* Responsive animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    @apply border-2 border-current;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break {
+    page-break-before: always;
+  }
 }
 
 .glass {
