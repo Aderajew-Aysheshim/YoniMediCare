@@ -6,6 +6,7 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 
 const User = require("./models/User");
 const Medicine = require("./models/Medicine");
+const Order = require("./models/Order");
 
 const medicines = [
   {
@@ -128,27 +129,111 @@ const medicines = [
     sideEffects: "None reported.",
     requiresPrescription: false,
   },
+  {
+    name: "Insulin Pen",
+    description: "Advanced insulin delivery system with precision dosing and memory function. Compatible with rapid-acting and long-acting insulin formulations.",
+    category: "Diabetes",
+    price: 2500,
+    stock: 30,
+    manufacturer: "DiaCare Solutions",
+    image: "https://images.unsplash.com/photo-1559757148-5f350a6ee3c6",
+    dosage: "As prescribed by healthcare provider.",
+    sideEffects: "Hypoglycemia, injection site reactions.",
+    requiresPrescription: true,
+  },
+  {
+    name: "Antibiotic Ointment",
+    description: "Broad-spectrum topical antibiotic for preventing and treating bacterial skin infections. Effective against gram-positive and gram-negative organisms.",
+    category: "Skin Care",
+    price: 75,
+    stock: 350,
+    manufacturer: "DermGuard Labs",
+    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef",
+    dosage: "Apply to affected area 2-3 times daily.",
+    sideEffects: "Rare: allergic reactions.",
+    requiresPrescription: true,
+  },
+  {
+    name: "Allergy Tablets",
+    description: "24-hour relief from seasonal allergies, hay fever, and allergic rhinitis. Non-drowsy formula with loratadine for daytime comfort.",
+    category: "Vitamins",
+    price: 45,
+    stock: 800,
+    manufacturer: "AllerClear Pharma",
+    image: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144",
+    dosage: "One tablet daily.",
+    sideEffects: "Rare: headache or dry mouth.",
+    requiresPrescription: false,
+  }
 ];
+
+// Generate sample orders for admin demo
+const generateSampleOrders = async (users, medicines) => {
+  const orders = [];
+  const statuses = ['pending', 'processing', 'shipped', 'delivered'];
+  const paymentMethods = ['telebirr', 'card', 'cash'];
+
+  // Create orders for different users
+  for (let i = 0; i < 15; i++) {
+    const user = users[Math.floor(Math.random() * users.length)];
+    const numItems = Math.floor(Math.random() * 3) + 1;
+    const selectedMedicines = [];
+
+    for (let j = 0; j < numItems; j++) {
+      const medicine = medicines[Math.floor(Math.random() * medicines.length)];
+      const quantity = Math.floor(Math.random() * 3) + 1;
+      selectedMedicines.push({
+        medicine: medicine._id,
+        quantity,
+        price: medicine.price
+      });
+    }
+
+    const totalAmount = selectedMedicines.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    orders.push({
+      user: user._id,
+      items: selectedMedicines,
+      totalAmount,
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+      payment: {
+        confirmed: Math.random() > 0.3,
+        method: paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
+        transactionId: Math.random() > 0.7 ? `TXN${Date.now()}` : null
+      },
+      deliveryAddress: {
+        street: `${Math.floor(Math.random() * 999) + 1} Demo Street`,
+        city: "Addis Ababa",
+        state: "Addis Ababa",
+        zipCode: `${Math.floor(Math.random() * 900) + 1000}`,
+        phone: user.phone
+      },
+      prescriptionImage: Math.random() > 0.5 ? `/uploads/prescriptions/prescription_${i}.jpg` : null,
+      createdAt: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000),
+      updatedAt: new Date()
+    });
+  }
+
+  return orders;
+};
 
 const seedDatabase = async () => {
   try {
-    console.log("Connecting to MongoDB...");
+    console.log("🌱 Connecting to MongoDB...");
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected Successfully");
+    console.log("✅ MongoDB Connected Successfully");
 
-    console.log("Deleting existing users...");
+    console.log("🗑️  Deleting existing data...");
     await User.deleteMany({});
-
-    console.log("Deleting existing medicines...");
     await Medicine.deleteMany({});
+    await Order.deleteMany({});
 
-    console.log("Seeding medicines...");
-    await Medicine.insertMany(medicines);
-    console.log(`${medicines.length} Medicines seeded successfully`);
+    console.log("💊 Seeding medicines...");
+    const seededMedicines = await Medicine.insertMany(medicines);
+    console.log(`✅ ${medicines.length} Medicines seeded successfully`);
 
-    // Only create users if everything else worked
-    console.log("Seeding users...");
-    await User.create([
+    console.log("👥 Seeding users...");
+    const seededUsers = await User.create([
       {
         name: "Admin User",
         email: "admin@yonimedicare.com",
@@ -163,6 +248,19 @@ const seedDatabase = async () => {
         role: "admin",
       },
       {
+        name: "Pharmacy Manager",
+        email: "pharmacy@yonimedicare.com",
+        password: "pharmacy123",
+        phone: "+251 911 333 333",
+        address: {
+          street: "789 Pharmacy Road",
+          city: "Addis Ababa",
+          state: "Addis Ababa",
+          zipCode: "1002",
+        },
+        role: "user",
+      },
+      {
         name: "John Doe",
         email: "user@example.com",
         password: "user123",
@@ -174,16 +272,60 @@ const seedDatabase = async () => {
           zipCode: "1001",
         },
         role: "user",
+      },
+      {
+        name: "Sarah Johnson",
+        email: "sarah@demo.com",
+        password: "sarah123",
+        phone: "+251 911 444 444",
+        address: {
+          street: "321 Customer Lane",
+          city: "Addis Ababa",
+          state: "Addis Ababa",
+          zipCode: "1003",
+        },
+        role: "user",
+      },
+      {
+        name: "Michael Brown",
+        email: "michael@demo.com",
+        password: "michael123",
+        phone: "+251 911 555 555",
+        address: {
+          street: "654 Client Road",
+          city: "Addis Ababa",
+          state: "Addis Ababa",
+          zipCode: "1004",
+        },
+        role: "user",
       }
     ]);
-    console.log("Users seeded successfully");
+    console.log(`✅ ${seededUsers.length} Users seeded successfully`);
 
-    console.log("Database Seeded Successfully!");
+    console.log("📦 Creating sample orders...");
+    const sampleOrders = await generateSampleOrders(seededUsers, seededMedicines);
+    await Order.insertMany(sampleOrders);
+    console.log(`✅ ${sampleOrders.length} Sample orders created`);
+
+    console.log("\n🎉 Database Seeded Successfully!");
+    console.log("\n🔐 Demo Credentials:");
+    console.log("   📧 Admin: admin@yonimedicare.com / admin123");
+    console.log("   🏥 Pharmacy: pharmacy@yonimedicare.com / pharmacy123");
+    console.log("   👤 User: user@example.com / user123");
+    console.log("   👤 Demo: sarah@demo.com / sarah123");
+    console.log("   👤 Demo: michael@demo.com / michael123");
+
+    console.log("\n📊 Demo Data Summary:");
+    console.log(`   💊 Medicines: ${seededMedicines.length} items`);
+    console.log(`   👥 Users: ${seededUsers.length} accounts`);
+    console.log(`   📦 Orders: ${sampleOrders.length} orders`);
+    console.log(`   💰 Total Revenue: ETB ${sampleOrders.reduce((sum, order) => sum + order.totalAmount, 0).toLocaleString()}`);
+
     process.exit(0);
   } catch (error) {
-    console.error("SEED ERROR:", error.message);
+    console.error("❌ SEED ERROR:", error.message);
     if (error.errors) {
-      console.error("VALIDATION ERRORS:", Object.keys(error.errors).map(key => `${key}: ${error.errors[key].message}`));
+      console.error("❌ VALIDATION ERRORS:", Object.keys(error.errors).map(key => `${key}: ${error.errors[key].message}`));
     }
     process.exit(1);
   }
