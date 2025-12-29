@@ -29,8 +29,15 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Medicines", path: "/medicines" },
+    { name: "Order Now", path: "/order-now" },
     { name: "My Orders", path: "/orders", protected: true },
     { name: "Dashboard", path: "/admin", adminOnly: true },
+  ];
+
+  const secondaryLinks = [
+    { name: "About", path: "/about" },
+    { name: "How It Works", path: "/how-it-works" },
+    { name: "Contact", path: "/contact" },
   ];
 
   const cartCount = getCartCount();
@@ -66,6 +73,29 @@ const Navbar = () => {
                 if (link.protected && !user) return null;
                 if (link.adminOnly && (!user || user.role !== "admin")) return null;
 
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`text-[10px] font-black uppercase tracking-[0.3em] transition-all relative py-2 ${!isScrolled && location.pathname === "/"
+                      ? isActive ? "text-white" : "text-white/60 hover:text-white"
+                      : isActive ? "text-emerald-600" : "text-slate-500 hover:text-slate-900"
+                      }`}
+                  >
+                    {link.name}
+                    {isActive && (
+                      <div className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${!isScrolled && location.pathname === "/" ? "bg-white" : "bg-emerald-600"
+                        } animate-slide-in`}></div>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Secondary Links */}
+            <div className="flex items-center space-x-6 border-l pl-6 border-slate-200/20">
+              {secondaryLinks.map((link) => {
+                const isActive = location.pathname === link.path;
                 return (
                   <Link
                     key={link.path}
@@ -141,25 +171,44 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden glass rounded-3xl mt-2 p-6 space-y-4 animate-fade-in shadow-2xl border border-white/20">
-            {navLinks.map((link) => {
-              if (link.protected && !user) return null;
-              if (link.adminOnly && (!user || user.role !== "admin")) return null;
-              return (
+            {/* Main Navigation */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider">Main Menu</h3>
+              {navLinks.map((link) => {
+                if (link.protected && !user) return null;
+                if (link.adminOnly && (!user || user.role !== "admin")) return null;
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-xl font-bold text-gray-800 hover:text-emerald-600 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Secondary Navigation */}
+            <div className="space-y-3 pt-4 border-t border-gray-100">
+              <h3 className="text-xs font-black text-gray-400 uppercase tracking-wider">Company</h3>
+              {secondaryLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsMenuOpen(false)}
-                  className="block text-xl font-bold text-gray-800 hover:text-emerald-600 transition-colors"
+                  className="block text-lg font-medium text-gray-600 hover:text-emerald-600 transition-colors"
                 >
                   {link.name}
                 </Link>
-              );
-            })}
+              ))}
+            </div>
 
             <Link
               to="/cart"
               onClick={() => setIsMenuOpen(false)}
-              className="flex justify-between items-center text-xl font-bold text-gray-800"
+              className="flex justify-between items-center text-xl font-bold text-gray-800 pt-4 border-t border-gray-100"
             >
               <span>Cart</span>
               <span className="bg-emerald-100 text-emerald-700 px-3 py-0.5 rounded-full text-sm">{cartCount} items</span>
