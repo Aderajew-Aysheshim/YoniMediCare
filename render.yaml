@@ -1,0 +1,5 @@
+web: npm start
+build: npm run build
+engines:
+  node: '18.x'
+  npm: '9.x'
