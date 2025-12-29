@@ -12,7 +12,7 @@ import MedicineDetail from "./pages/MedicineDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/AdminDashboardEnhanced";
 import PharmacyDashboard from "./pages/PharmacyDashboard";
 import NotFound from "./pages/NotFound";
 

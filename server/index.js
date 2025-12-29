@@ -38,6 +38,7 @@ app.use("/api/medicines", require("./routes/medicines"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/upload", require("./routes/upload"));
 app.use("/api/audit", require("./routes/audit"));
+app.use("/api/users", require("./routes/users"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
