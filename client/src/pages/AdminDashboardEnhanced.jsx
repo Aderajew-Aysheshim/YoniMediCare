@@ -285,6 +285,27 @@ const AdminDashboardEnhanced = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              {/* Quick Portal Switch Buttons */}
+              <div className="hidden md:flex items-center space-x-2 bg-white/10 rounded-xl p-1">
+                <button
+                  onClick={() => navigate('/pharmacy')}
+                  className="px-3 py-1.5 text-xs font-medium text-emerald-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors flex items-center space-x-1"
+                  title="Switch to Pharmacy Portal"
+                >
+                  <MdLocalPharmacy className="text-sm" />
+                  <span>Pharmacy</span>
+                </button>
+                <div className="w-px h-4 bg-white/20"></div>
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="px-3 py-1.5 text-xs font-medium text-white bg-white/20 rounded-lg flex items-center space-x-1"
+                  title="Current: Admin Portal"
+                >
+                  <MdDashboard className="text-sm" />
+                  <span>Admin</span>
+                </button>
+              </div>
+
               <button className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors relative">
                 <FaBell className="text-white text-xl" />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -669,164 +690,166 @@ const AdminDashboardEnhanced = () => {
       </div>
 
       {/* Medicine Form Modal */}
-      {showMedicineForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-black text-gray-900 mb-6">
-              {editingMedicine ? "Edit Medicine" : "Add New Medicine"}
-            </h3>
-            <form onSubmit={handleMedicineSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={medicineForm.name}
-                    onChange={(e) => setMedicineForm({ ...medicineForm, name: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  <select
-                    value={medicineForm.category}
-                    onChange={(e) => setMedicineForm({ ...medicineForm, category: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="Pain Relief">Pain Relief</option>
-                    <option value="Antibiotics">Antibiotics</option>
-                    <option value="Vitamins">Vitamins</option>
-                    <option value="Cold & Flu">Cold & Flu</option>
-                    <option value="Digestive Health">Digestive Health</option>
-                    <option value="Heart Health">Heart Health</option>
-                    <option value="Diabetes">Diabetes</option>
-                    <option value="Skin Care">Skin Care</option>
-                    <option value="First Aid">First Aid</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  required
-                  value={medicineForm.description}
-                  onChange={(e) => setMedicineForm({ ...medicineForm, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  rows={3}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Price (ETB)</label>
-                  <input
-                    type="number"
-                    required
-                    value={medicineForm.price}
-                    onChange={(e) => setMedicineForm({ ...medicineForm, price: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-                  <input
-                    type="number"
-                    required
-                    value={medicineForm.stock}
-                    onChange={(e) => setMedicineForm({ ...medicineForm, stock: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Manufacturer</label>
-                  <input
-                    type="text"
-                    required
-                    value={medicineForm.manufacturer}
-                    onChange={(e) => setMedicineForm({ ...medicineForm, manufacturer: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
-                <input
-                  type="text"
-                  required
-                  value={medicineForm.dosage}
-                  onChange={(e) => setMedicineForm({ ...medicineForm, dosage: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Side Effects</label>
-                <input
-                  type="text"
-                  required
-                  value={medicineForm.sideEffects}
-                  onChange={(e) => setMedicineForm({ ...medicineForm, sideEffects: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                {imagePreview && (
-                  <div className="mt-4">
-                    <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
+      {
+        showMedicineForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <h3 className="text-xl font-black text-gray-900 mb-6">
+                {editingMedicine ? "Edit Medicine" : "Add New Medicine"}
+              </h3>
+              <form onSubmit={handleMedicineSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={medicineForm.name}
+                      onChange={(e) => setMedicineForm({ ...medicineForm, name: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
                   </div>
-                )}
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select
+                      value={medicineForm.category}
+                      onChange={(e) => setMedicineForm({ ...medicineForm, category: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="Pain Relief">Pain Relief</option>
+                      <option value="Antibiotics">Antibiotics</option>
+                      <option value="Vitamins">Vitamins</option>
+                      <option value="Cold & Flu">Cold & Flu</option>
+                      <option value="Digestive Health">Digestive Health</option>
+                      <option value="Heart Health">Heart Health</option>
+                      <option value="Diabetes">Diabetes</option>
+                      <option value="Skin Care">Skin Care</option>
+                      <option value="First Aid">First Aid</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
 
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="requiresPrescription"
-                  checked={medicineForm.requiresPrescription}
-                  onChange={(e) => setMedicineForm({ ...medicineForm, requiresPrescription: e.target.checked })}
-                  className="mr-2"
-                />
-                <label htmlFor="requiresPrescription" className="text-sm font-medium text-gray-700">
-                  Requires Prescription
-                </label>
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <textarea
+                    required
+                    value={medicineForm.description}
+                    onChange={(e) => setMedicineForm({ ...medicineForm, description: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    rows={3}
+                  />
+                </div>
 
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowMedicineForm(false);
-                    setEditingMedicine(null);
-                    setImagePreview(null);
-                  }}
-                  className="px-6 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={uploadingImage}
-                  className="px-6 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:opacity-50"
-                >
-                  {uploadingImage ? "Uploading..." : editingMedicine ? "Update Medicine" : "Add Medicine"}
-                </button>
-              </div>
-            </form>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Price (ETB)</label>
+                    <input
+                      type="number"
+                      required
+                      value={medicineForm.price}
+                      onChange={(e) => setMedicineForm({ ...medicineForm, price: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                    <input
+                      type="number"
+                      required
+                      value={medicineForm.stock}
+                      onChange={(e) => setMedicineForm({ ...medicineForm, stock: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Manufacturer</label>
+                    <input
+                      type="text"
+                      required
+                      value={medicineForm.manufacturer}
+                      onChange={(e) => setMedicineForm({ ...medicineForm, manufacturer: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
+                  <input
+                    type="text"
+                    required
+                    value={medicineForm.dosage}
+                    onChange={(e) => setMedicineForm({ ...medicineForm, dosage: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Side Effects</label>
+                  <input
+                    type="text"
+                    required
+                    value={medicineForm.sideEffects}
+                    onChange={(e) => setMedicineForm({ ...medicineForm, sideEffects: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                  {imagePreview && (
+                    <div className="mt-4">
+                      <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="requiresPrescription"
+                    checked={medicineForm.requiresPrescription}
+                    onChange={(e) => setMedicineForm({ ...medicineForm, requiresPrescription: e.target.checked })}
+                    className="mr-2"
+                  />
+                  <label htmlFor="requiresPrescription" className="text-sm font-medium text-gray-700">
+                    Requires Prescription
+                  </label>
+                </div>
+
+                <div className="flex justify-end space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowMedicineForm(false);
+                      setEditingMedicine(null);
+                      setImagePreview(null);
+                    }}
+                    className="px-6 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={uploadingImage}
+                    className="px-6 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:opacity-50"
+                  >
+                    {uploadingImage ? "Uploading..." : editingMedicine ? "Update Medicine" : "Add Medicine"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 };
 
