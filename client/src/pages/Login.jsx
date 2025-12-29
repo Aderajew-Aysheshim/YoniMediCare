@@ -25,8 +25,18 @@ const Login = () => {
   const [portal, setPortal] = useState('pharmacy');
 
   const demoAccounts = {
-    pharmacy: { email: 'pharmacy@yonimedicare.com', password: 'pharmacy123' },
-    admin: { email: 'admin@yonimedicare.com', password: 'admin123' },
+    pharmacy: {
+      email: 'pharmacy@yonimedicare.com',
+      password: 'pharmacy123',
+      label: 'Pharmacy Portal',
+      description: 'Manage orders and inventory'
+    },
+    admin: {
+      email: 'admin@yonimedicare.com',
+      password: 'admin123',
+      label: 'Admin Portal',
+      description: 'Full system administration'
+    },
   };
 
   const { login, verify2FA } = useContext(AuthContext);
@@ -146,9 +156,17 @@ const Login = () => {
               </button>
             </div>
 
-            <div className="mb-6 p-4 rounded-xl bg-gray-50 border border-gray-200">
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Demo credentials</p>
+            <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-200">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+                    <MdSecurity className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-gray-900">{demoAccounts[portal].label}</p>
+                    <p className="text-xs text-gray-600">{demoAccounts[portal].description}</p>
+                  </div>
+                </div>
                 <button
                   type="button"
                   onClick={() => {
@@ -156,17 +174,21 @@ const Login = () => {
                     setFormData((prev) => ({ ...prev, email: demo.email, password: demo.password }));
                     setShowPassword(false);
                   }}
-                  className="text-[10px] font-black uppercase tracking-widest text-emerald-700 hover:text-emerald-900"
+                  className="px-3 py-1 bg-emerald-600 text-white text-xs font-black rounded-lg hover:bg-emerald-700 transition-colors"
                 >
                   Use demo
                 </button>
               </div>
-              <div className="mt-2 text-xs font-bold text-gray-700">
-                <div>
-                  <span className="text-gray-500">Email:</span> {demoAccounts[portal].email}
-                </div>
-                <div>
-                  <span className="text-gray-500">Password:</span> {demoAccounts[portal].password}
+              <div className="bg-white/70 rounded-lg p-3 border border-gray-200">
+                <div className="grid grid-cols-1 gap-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 font-medium">Email:</span>
+                    <span className="font-mono text-gray-900">{demoAccounts[portal].email}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 font-medium">Password:</span>
+                    <span className="font-mono text-gray-900">{demoAccounts[portal].password}</span>
+                  </div>
                 </div>
               </div>
             </div>

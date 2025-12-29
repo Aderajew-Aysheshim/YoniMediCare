@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import api from '../utils/api';
 import {
   FaBox, FaShoppingCart, FaUsers, FaChartLine, FaBell,
@@ -16,6 +17,8 @@ import {
 } from 'react-icons/md';
 
 const PharmacyDashboard = () => {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -96,6 +99,11 @@ const PharmacyDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const getStatusColor = (status) => {
     const colors = {
       pending: "bg-amber-100 text-amber-700 border-amber-200",
@@ -133,15 +141,29 @@ const PharmacyDashboard = () => {
       <div className="bg-[#020617] pt-28 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_-20%,rgba(16,185,129,0.1),transparent)]"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex items-center space-x-4 mb-6">
-            <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
-              <MdLocalPharmacy className="text-3xl text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                <MdLocalPharmacy className="text-3xl text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter uppercase leading-none">
+                  PHARMACY <span className="text-emerald-500">PORTAL</span>
+                </h1>
+                <p className="text-slate-400 text-lg max-w-2xl font-medium">Manage your pharmacy operations, orders, and inventory.</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter uppercase leading-none">
-                PHARMACY <span className="text-emerald-500">PORTAL</span>
-              </h1>
-              <p className="text-slate-400 text-lg max-w-2xl font-medium">Manage your pharmacy operations, orders, and inventory.</p>
+            <div className="flex items-center space-x-4">
+              <button className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
+                <FaBell className="text-white text-xl" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors flex items-center space-x-2"
+              >
+                <FaSignOutAlt className="text-white text-xl" />
+                <span className="text-white text-sm font-medium">Logout</span>
+              </button>
             </div>
           </div>
         </div>

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../utils/api";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import {
   FaBox, FaShoppingCart, FaUsers, FaChartLine, FaBell,
   FaSearch, FaCog, FaUserCircle, FaSignOutAlt, FaPlus,
@@ -17,6 +19,8 @@ import {
 import { Link } from "react-router-dom";
 
 const AdminDashboardEnhanced = () => {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [medicines, setMedicines] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -121,6 +125,11 @@ const AdminDashboardEnhanced = () => {
         { _id: '5', name: 'Michael Brown', email: 'michael@demo.com', role: 'user', phone: '+251 911 555 555' }
       ]);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   const handleImageUpload = async (e) => {
@@ -267,9 +276,13 @@ const AdminDashboardEnhanced = () => {
               <button className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
                 <FaBell className="text-white text-xl" />
               </button>
-              <Link to="/login" className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
+              <button
+                onClick={handleLogout}
+                className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors flex items-center space-x-2"
+              >
                 <FaSignOutAlt className="text-white text-xl" />
-              </Link>
+                <span className="text-white text-sm font-medium">Logout</span>
+              </button>
             </div>
           </div>
         </div>
