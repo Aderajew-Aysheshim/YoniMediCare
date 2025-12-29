@@ -7,12 +7,12 @@ import {
   FaChevronDown, FaFilter, FaFileExport, FaFileImport, FaSyncAlt,
   FaDollarSign, FaShoppingBag, FaChartBar, FaEdit, FaTrash,
   FaCloudUploadAlt, FaClipboardList, FaMoneyBillWave, FaTruck,
-  FaPills, FaHospital, FaClock, FaCheckCircle, FaExclamationTriangle
+  FaPills, FaPrescriptionBottle, FaClock, FaCheckCircle, FaExclamationTriangle
 } from 'react-icons/fa';
 import {
   MdDashboard, MdInventory, MdLocalShipping, MdListAlt,
   MdPayment, MdPeople, MdSettings, MdMenu, MdNotifications,
-  MdCheck, MdVisibility, MdLocalPharmacy
+  MdCheck, MdVisibility, MdPharmacy, MdLocalPharmacy
 } from 'react-icons/md';
 
 const PharmacyDashboard = () => {
@@ -278,7 +278,7 @@ const PharmacyDashboard = () => {
 
             <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg p-8 text-white">
               <div className="flex items-center space-x-3 mb-4">
-                <FaHospital className="text-3xl" />
+                <FaPrescriptionBottle className="text-3xl" />
                 <h3 className="text-xl font-black">Pharmacy Portal</h3>
               </div>
               <p className="text-emerald-50 mb-6">Manage your pharmacy operations efficiently with our comprehensive dashboard.</p>

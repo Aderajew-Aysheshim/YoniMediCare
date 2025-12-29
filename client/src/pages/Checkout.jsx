@@ -252,7 +252,7 @@ const Checkout = () => {
                     <div className="bg-emerald-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-xl">02</div>
                     <div>
                       <h2 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Verification Assets</h2>
-                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">Clinical prescription mandatory</p>
+                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">Pharmacy prescription mandatory</p>
                     </div>
                   </div>
 

@@ -61,7 +61,7 @@ const Orders = () => {
               HISTORICAL <span className="text-emerald-500">RELAYS</span>
             </h1>
             <p className="max-w-xl text-slate-400 font-bold uppercase tracking-widest text-xs leading-relaxed">
-              Active tracking and historical archives of all clinical transfers and pharmaceutical deployments.
+              Active tracking and historical archives of all pharmacy transfers and pharmaceutical deployments.
             </p>
           </div>
         </div>
@@ -80,7 +80,7 @@ const Orders = () => {
               to="/medicines"
               className="btn-primary inline-flex items-center space-x-3 px-10 py-4 shadow-emerald-200"
             >
-              <span className="font-black uppercase tracking-widest text-xs">Explore Catalog</span>
+              <span className="font-black uppercase tracking-widest text-xs">Explore Pharmacy</span>
               <MdKeyboardArrowRight className="text-xl" />
             </Link>
           </div>
@@ -141,7 +141,7 @@ const Orders = () => {
 
                     {/* Items List */}
                     <div className="space-y-6 mb-12">
-                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Clinical Regimen Breakdown</h4>
+                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Pharmacy Regimen Breakdown</h4>
                       {order.items.map((item, idx) => (
                         <div key={idx} className="flex items-center justify-between p-8 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 group-hover:bg-white group-hover:shadow-xl group-hover:shadow-slate-200/40 transition-all duration-700">
                           <div className="flex items-center space-x-8">

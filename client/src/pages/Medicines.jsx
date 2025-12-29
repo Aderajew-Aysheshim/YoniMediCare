@@ -76,7 +76,7 @@ const Medicines = () => {
             <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Active Manifest v4.1</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter uppercase leading-none">
-            CLINICAL <span className="text-emerald-500">CATALOG</span>
+            PHARMACY <span className="text-emerald-500">CATALOG</span>
           </h1>
           <p className="text-slate-400 text-lg max-w-2xl font-medium">Institutional resource monitoring and pharmaceutical distribution portal.</p>
         </div>
@@ -206,7 +206,7 @@ const Medicines = () => {
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-20 text-center">
                 <div className="max-w-xs mx-auto">
                   <img src="https://illustrations.popsy.co/emerald/box.svg" alt="Empty" className="mb-8" />
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">No results found</h3>
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">PHARMACY CATALOG</h1>
                   <p className="text-gray-500 mb-8">We couldn't find any medicines matching your filters. Try search something else.</p>
                   <button onClick={clearFilters} className="btn-primary w-full shadow-none">Clear all filters</button>
                 </div>

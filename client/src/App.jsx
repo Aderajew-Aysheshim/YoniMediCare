@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboard";
+import PharmacyDashboard from "./pages/PharmacyDashboard";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -51,6 +52,14 @@ function App() {
                   element={
                     <ProtectedRoute adminOnly={true}>
                       <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/pharmacy"
+                  element={
+                    <ProtectedRoute>
+                      <PharmacyDashboard />
                     </ProtectedRoute>
                   }
                 />
