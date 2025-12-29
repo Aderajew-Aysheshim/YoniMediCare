@@ -1,27 +1,23 @@
 {
-  "version": 2,
-  "name": "yonimedicare",
-  "builds": [
-    {
-      "src": "client/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/client/index.html"
-    }
-  ],
-  "env": {
-    "VITE_API_URL": "@api_url"
-  },
-  "build": {
+    "version": 2,
+    "name": "yonimedicare",
+    "builds": [{
+        "src": "client/package.json",
+        "use": "@vercel/static-build",
+        "config": {
+            "distDir": "dist"
+        }
+    }],
+    "routes": [{
+        "src": "/(.*)",
+        "dest": "/client/index.html"
+    }],
     "env": {
-      "VITE_API_URL": "@api_url"
+        "VITE_API_URL": "https://yonimedicare.onrender.com/api"
+    },
+    "build": {
+        "env": {
+            "VITE_API_URL": "https://yonimedicare.onrender.com/api"
+        }
     }
-  }
 }

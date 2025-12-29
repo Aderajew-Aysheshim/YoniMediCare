@@ -49,7 +49,7 @@
    - **Output Directory**: `dist`
 6. Add Environment Variable:
    ```
-   VITE_API_URL=https://your-app-name.onrender.com
+   VITE_API_URL="https://yonimedicare.onrender.com/api"
    ```
 7. Deploy and get your Vercel URL
 
